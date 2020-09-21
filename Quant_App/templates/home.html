@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+    {% csrf_token %}
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+
+<div class="container">
+  <h2>Vantage-Quant </h2>
+  <p>Review the Imported Data</p> 
+  <p><a href="fileupload"/>File UPLOAD</a></p>                                                                                     
+
+</div>
+
+<div class="container">
+  {% csrf_token %}
+  <form method="POST" action="home" >
+    <select class="form-control" name="selected_file">
+      <option value="" disabled selected></option>
+      {% for value in coll_list %}
+
+      <option value="{{ value }}">
+        {{value}}
+      </option>
+      {% endfor %}
+    </select>
+    <button class="btn btn-primary" type="submit">Show</button>
+  </form>
+
+</div>
+
+
+<div class="container">
+
+  <p>The selected file:{{file}}</p>
+
+</div>
+
+<div class="container">
+
+  {% autoescape off %}
+  <table class="table table-dark">
+    <h1>Hello This is Table</h1>
+    
+      {{ table_content }}
+    
+  </table>
+  {% endautoescape %}
+
+  
+
+</div>
+
+<div class="container">
+
+  {% autoescape off %}
+    {{ table_content }}
+  {% endautoescape %}
+
+  
+
+</div>
+
+<div class="container">
+
+  {% autoescape off %}
+    {{ context }}
+  {% endautoescape %}
+
+  
+
+</div>
+
+
+
+</body>
+</html>
+
+

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+{% csrf_token %}
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+
+    <div class="container">
+        <h3>Savart--Vantage-Quant</h3>
+    </div>
+    <br><br>
+
+    <div class="container">
+        <a class="btn btn-info" href="">Home</a>
+        <a class="btn btn-primary" href="oldstrategy">View Data</a>
+        <a class="btn btn-success" href="fileupload">Import New</a>
+        <a class="btn btn-primary" href="createstrategy">My New-Strategy</a>
+        <a class="btn btn-primary" href="Viewstrategies">View all Strategy</a>
+        <a class="btn btn-primary" href="tca">TCA</a>
+        <a class="btn btn-primary" href="viewtca">My TCA Views</a>
+        <a class="btn btn-primary" href="view_treatment">View all Treatement</a>
+        <a class="btn btn-primary" href="param_mapping">Param Mapping</a>
+
+
+    </div>
+    <!-- <p>Filtered HTML</p>
+<p>{{ years }}</p> -->
+    <div class="container">
+        <p class="text-center">{{ tca_message }}</p>
+    </div>
+    <div class="container">
+        <form method="post" action="edittca" enctype="multipart/form-data">{% csrf_token %}
+            <!-- <div class="form-group"> -->
+            <input type="text" class="form-control" name="TCA_ID" value=" {{ get_list.TCA_ID }} " style="display:none;">
+            <label for="formGroupExampleInput">Broker Name:</label>
+            <select class="form-control" name="brokername">
+                    <option value="{{get_list.Broker_Name}}">{{ get_list.Broker_Name }}</option>
+                    <option value="Money Control">
+                    Money Control
+                    </option>
+                    <option value="Zerodha">
+                    Zerodha
+                    </option>
+                </select>
+            <label for="coun">Select Country:</label>
+            <select class="form-control" name="countryname">
+                <option value="{{get_list.Country_Name}}">{{ get_list.Country_Name }}</option>
+                <option value="INDIA">
+                    India
+                </option>
+                <option value="USA">
+                    USA
+                </option>
+                <option value="CANADA">
+                    Canada
+                </option>
+            </select>
+            <label for="coun">Purchase Currency:</label>
+            <select class="form-control" name="purchasecurrency" value="{{get_list.Purchase_Currency}}">
+                <option value="{{get_list.Purchase_Currency}}">{{ get_list.Purchase_Currency }}</option>
+                <option value="Rupees">
+                    Rupees
+                </option>
+                <option value="Dollars">
+                    Dollars
+                </option>
+            </select>
+            <label for="coun">Investee Currency:</label>
+            <select class="form-control" name="investeecurrency">
+                <option value="{{get_list.Investee_Currency}}">{{ get_list.Investee_Currency }}</option>
+                <option value="Rupees">
+                    Rupees
+                </option>
+                <option value="Dollars">
+                    Dollars
+                </option>
+            </select>
+            <label for="usr">Delivery brokerage:</label>
+            <input type="text" class="form-control" id="usr" name="deliverybrokage" value=" {{ get_list.Delivery_Brokage }} ">
+
+            <label for="usr">LTCG Tax</label>
+            <input type="text" class="form-control" id="usr" name="ltcgtax" value="{{ get_list.Ltcg_Tax }}">
+
+            <label for="usr">All other charges</label>
+            <input type="text" class="form-control" id="usr" name="othercharges" value="{{ get_list.Other_Charges }}">
+
+
+            <label for="coun">Purchase Type</label>
+            <select class="form-control" name="purchasetype">
+                <option value="{{get_list.Purchasetype}}">{{ get_list.Purchasetype }}</option>
+                <option value="Full">
+                    Full 
+                </option>
+                <option value="Specific">
+                    Specific
+                </option>
+            </select>
+
+
+            <label for="usr"> Purchase Rate</label>
+            <input type="text" class="form-control" id="usr" name="purchaserate" value="{{ get_list.purchaserate }}">
+
+            <label for="usr"> Quantity</label>
+            <input type="text" class="form-control" id="usr" name="quantity" value="{{ get_list.Quantity }}">
+
+            <label for="usr">Comments</label>
+            <input type="text" class="form-control" id="usr" name="comments" value="{{ get_list.Comments }}">
+
+            <br/>
+            <button type="submit">Update</button>
+
+
+            <!-- </div> -->
+        </form>
+
+    </div>
+
+
+
+
+
+    <!-- <div class="container">
+ <form method="post" action="filtered-data" enctype="multipart/form-data">{% csrf_token %}
+
+
+</form>
+</div>  -->
+
+
+</body>
+
+</html>

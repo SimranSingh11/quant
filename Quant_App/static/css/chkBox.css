@@ -1,0 +1,90 @@
+label.chkBox,
+label.radioBtn {
+  cursor: pointer;
+  font-size: .95em;
+  color: #666;
+  display: block;
+  background-color: #f7f7f7;
+  margin: 0px 6px 6px 0px;
+  padding: 6px 0 6px 10px;
+  border-radius: 4px;
+}
+
+label.chkBox:hover, label.radioBtn:hover {
+  background-color: #eee;
+}
+
+label.chkBox input[type="checkbox"] {
+  display: none;
+  opacity: 0;
+}
+
+label.chkBox input[type="checkbox"] + .label-text1::before {
+  content: "\f096";
+  font-family: "FontAwesome";
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  width: 1em;
+  display: inline-block;
+  color: #666;
+  padding: 0 2px 0 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+label.chkBox, label.radioBtn {
+  cursor: pointer;
+  font-size: .95em;
+  color: #666;
+  display: block;
+  background-color: #f7f7f7;
+  margin: 0px 6px 6px 0px;
+  padding: 6px 0 6px 10px;
+  border-radius: 4px;
+}
+
+.login_font {
+  color: #646464;
+  font-size: .9rem;
+}
+
+label span {
+  color: #000;
+  font-size: 1.2em;
+  padding: 0 6px 0 0;
+  width: 25px;
+}
+
+label.chkBox input[type="checkbox"]:checked + .label-text1:before {
+  font-family: "FontAwesome";
+  content: "\f046";
+  color: #369;
+  -webkit-animation: chkBox .4s ease-in;
+  animation: chkBox .4s ease-in;
+}
+
+label.chkBox input[type="checkbox"] + .label-text1:before {
+  content: "\f096";
+  font-family: "FontAwesome";
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  font-size: .9rem;
+  line-height: 1;
+  width: 1em;
+  display: inline-block;
+  color: #666;
+  padding: 0 2px 0 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+label.chkBox.highlight, label.radioBtn.highlight {
+  background-color: #feffe6 !important;
+  -webkit-transition: .8s;
+  transition: .8s;
+}
+/*# sourceMappingURL=chkBox.css.map */

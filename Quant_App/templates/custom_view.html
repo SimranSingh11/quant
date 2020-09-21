@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Savart-Vantage Quant</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <!-- Css and js -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.5/css/responsive.bootstrap4.min.css">
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.5/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.5/js/responsive.bootstrap4.min.js"></script>
+</head>
+
+<body>
+    <br>
+    <div class="container">
+        <a class="btn btn-info" href="">Home</a>
+        <a class="btn btn-primary" href="oldstrategy">View Data</a>
+        <a class="btn btn-success" href="fileupload">Import New</a>
+        <a class="btn btn-primary" href="createstrategy">My New-Strategy</a>
+        <a class="btn btn-primary" href="Viewstrategies">View all Strategy</a>
+        <a class="btn btn-primary" href="tca">TCA</a>
+        <a class="btn btn-primary" href="viewtca">My TCA Views</a>
+        <a class="btn btn-primary" href="view_treatment">View all Treatement</a>
+        <a class="btn btn-primary" href="param_mapping">Param Mapping</a>
+
+
+
+    </div>
+    <br>
+    <!-- Stratergy name -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>{{ strategyname }}</h1>
+                </div>
+            </div>
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+    <div class="content-wrapper">
+        <section class="content">
+            <form method="post" action="get_all_treat_data" enctype="multipart/form-data">{% csrf_token %}
+                <div class="container-fluid">
+                    <!-- SELECT2 EXAMPLE -->
+                    <div class="row">
+                        <!-- <div class="col-sm-3">
+                            <div class="form-group">
+                                <label>Files names  :    </label>
+                                <select class="form-control select2" style="width: 50%;" id="file_name" name="file_name">
+                                    {% for param in params %}
+                                    <option value="{{ param }}">
+                                      {{param}}
+                                    </option>
+                                    {% endfor %}
+        
+                            </select>
+                            </div>
+
+                        </div> -->
+                        <!-- /.col -->
+                        <div class="col-sm-6">
+                            <!-- /.form-group -->
+                            <div class="form-group">
+                                <label>Treatment name  :  </label>
+                                <select class="form-control select2" style="width: 50%;" id="treatment_id" name="treatment_id" onChange="getParam(this.value);">
+                                    {% for treat in treatments %}
+                                    {% load quantapp_extras %}
+                                    <option value="{{ treat|mongo_id }}">
+                                      {{ treat.treatment_name }}
+                                    </option>
+                                    {% endfor %}
+                            
+                            </select>
+                                <div class="form-group">
+                                    <label>Select Parameter</label>
+                                    <select class="form-control select2" multiple="multiple" style="width: 100%;" name="parameter" id="parameter">
+                            </select>
+                                </div>
+                            </div>
+                            <!-- /.form-group -->
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label>Output Measure : </label>
+                                <select class="form-control select2" style="width: 50%;" id="output_measure" name="output_measure">
+                                    <option value="combination_quartile_view">Combination Quartile View</option>
+                                    <option value="quartile_view">Quartile View</option>
+                                    <option value="rank_view_all">Rank View Overall</option>
+                                    <option value="rank_view_year">Rank View Yearly</option>
+                                    <option value="parameter_view">Parameter View</option>
+                                    <option value="industry_view">Industry View</option>
+                                </select>
+                                <div class="col-sm-2">
+                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!-- /.col -->
+                    </div>
+
+                    <!-- /.card -->
+            </form>
+
+            <div class="card-body">
+                <table id="example" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
+                    <thead>
+
+                        <tr>
+                            {% for column in columns %}
+                            <th>{{ column }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if value_list %} {% for val in value_list %}
+                        <tr>
+                            {% for v in val %}
+                            <td>{{ v }}</td>
+                            {% endfor %}
+                        </tr>
+
+                        {% endfor %} {% endif %}
+
+                    </tbody>
+                </table>
+
+            </div>
+
+
+            </div>
+            <!-- /.container-fluid -->
+        </section>
+    </div>
+
+
+
+
+
+    <script>
+        $(document).ready(function() {
+            $('#example').DataTable();
+        });
+        $(document).ready(function() {
+            $('#treatment_id').select2();
+        });
+        $(document).ready(function() {
+            $('#file_name').select2();
+        });
+        $(document).ready(function() {
+            $('#parameter').select2();
+        });
+
+        // ajax request for dependent dropdown
+        function getParam(val) {
+            $("#parameter").val("");
+            $.ajax({
+                type: "GET",
+                url: "GetParamsByTreatmentId/" + val,
+                success: function(result) {
+                    console.log(result)
+                    $.each(result, function(key, val) {
+                        //Here is where I want to parse each object and add to the HTML table
+                        $('#parameter').append(`<option value="${val}"> 
+                                       ${val} 
+                                  </option>`);
+                    });
+                }
+            });
+        }
+    </script>
+
+
+</body>
+
+</html>

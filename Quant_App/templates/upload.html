@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+{% csrf_token %}
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.5/css/responsive.bootstrap4.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.5/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.5/js/responsive.bootstrap4.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <h3>Savart--Vantage-Quant</h3>
+    </div>
+
+    <div class="container">
+
+        <a class="btn btn-info" href="">Home</a>
+        <a class="btn btn-primary" href="oldstrategy">View Data</a>
+        <a class="btn btn-success" href="fileupload">Import New</a>
+        <a class="btn btn-primary" href="createstrategy">My New-Strategy</a>
+        <a class="btn btn-primary" href="Viewstrategies">View all Strategy</a>
+        <a class="btn btn-primary" href="tca">TCA</a>
+
+
+    </div>
+    <br>
+
+    <div class="container">
+        <form method="post" action="fileupload" enctype="multipart/form-data">{% csrf_token %}
+
+            <input type="file" name="file" multiple/>
+            <br>
+            <div class="row">
+                <div class="col-sm-4">
+
+                    <div class="form-group">
+                        <label>Share Price Data</label>
+                        <select class="form-control select2" style="width: 50%;" name="share_price_data">
+                            <option value="Client" >Daily</option>
+                            <option value="Weekly" >Weekly</option>
+                            <option value="Monthly" >Monthly</option>
+                            <option value="3 months" >3 months</option>
+                            <option value="6 months" >6 months</option>
+
+                        </select>
+                    </div>
+
+                    <!-- /.form-group -->
+                    <div class="form-group">
+                        <!-- Date input -->
+                        <label class="control-label" for="date">Exchange</label>
+                        <select class="form-control select2" style="width: 50%;" name="exchange">
+                            <option value="NSE" >NSE</option>
+                            <option value="BSE" >BSE</option>
+
+                        </select>
+                    </div>
+                    <!-- /.form-group -->
+                </div>
+                <!-- /.col -->
+                <div class="col-sm-4">
+                    <!-- /.form-group -->
+                    <div class="form-group">
+                        <!-- Date input -->
+                        <label class="control-label" for="date">Start Date</label>
+                        <input class="form-control" id="date" name="start_date" placeholder="MM/DD/YYY" type="date" />
+                    </div>
+
+                    <div class="form-group">
+                        <!-- Date input -->
+                        <label class="control-label" for="date">Industry classification</label>
+                        <select class="form-control select2" style="width: 50%;" name="industry_classification">
+                            <option value="GIC" >GIC</option>
+                            <option value="NIC" >NIC</option>
+                            <option value="ICB" >ICB</option>
+
+                        </select>
+                    </div>
+
+                    <!-- /.form-group -->
+                </div>
+
+                <div class="col-sm-4">
+                    <!-- /.form-group -->
+                    <div class="form-group">
+                        <!-- Date input -->
+                        <label class="control-label" for="date">End Date</label>
+                        <input class="form-control" id="date" name="end_date" placeholder="MM/DD/YYY" type="date" />
+                    </div>
+
+                    <div class="form-group">
+                        <!-- Date input -->
+                        <label class="control-label" for="date">Industry/Sector </label>
+                        <select class="form-control select2" style="width: 50%;" name="industry_sector">
+                            <option value="GIC" >GIC</option>
+                            <option value="NIC" >NIC</option>
+                            <option value="ICB" >ICB</option>
+
+                        </select>
+                    </div>
+
+                    <!-- /.form-group -->
+                </div>
+                <!-- /.col -->
+            </div>
+            <input type="submit" value="Submit" />
+
+        </form>
+
+    </div>
+
+    <!-- datatable -->
+    <p class="text-center">{{ message }}</p>
+    <table id="example" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
+        <thead>
+            {% if key_list %}
+            <tr>
+                {% for x in key_list %}
+                <th>{{ x }}</th>
+                {% endfor %}
+            </tr>
+            {% endif %}
+        </thead>
+        <tbody>
+            {% if value_list %} {% for val in value_list %}
+            <tr>
+                {% for v in val %}
+                <td>{{ v }}</td>
+                {% endfor %}
+            </tr>
+
+            {% endfor %} {% endif %}
+
+        </tbody>
+    </table>
+
+
+    </div>
+
+    <!-- <div class="container">
+
+        {% autoescape off %} {{ table_content1 }} {% endautoescape %}
+
+
+
+    </div> -->
+
+    <div class="container">
+
+        {% autoescape off %} {{ df_message }} {% endautoescape %}
+
+
+
+    </div>
+
+</body>
+
+<script>
+</script>
+
+</html>

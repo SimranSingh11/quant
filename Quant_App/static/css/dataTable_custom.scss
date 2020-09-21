@@ -1,0 +1,38 @@
+.num {
+  text-align: right;;
+}
+
+.leftAlign {
+  text-align: left;
+}
+
+table.smallFont tr td,
+table.smallFont tr th {
+    font-size:13px;
+}
+
+table.smallFont tr.child span.tr-title {
+  font-size:13px;
+  font-weight: 400;
+  color:#000;
+}
+
+
+.dataTables_wrapper .dataTables_filter input {
+   z-index: -1;
+  }
+
+table.dataTable thead,
+table.dataTable.display tbody td {
+  font-size: .9rem;
+}
+
+
+table.dataTable tbody th,
+table.dataTable tbody td {
+  padding: 4px 6px;
+}
+
+// table.smallFont tbody tr:hover {
+//     background-color: rgb(255, 251, 172) !important;
+// }

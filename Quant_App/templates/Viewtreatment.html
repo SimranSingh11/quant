@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+{% csrf_token %}
+
+<head>
+    <title>Savart-Vantage Quant</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+
+    <div class="container">
+        <h3>Savart--Vantage-Quant</h3>
+    </div>
+    <br><br>
+
+    <div class="container">
+        <a class="btn btn-info" href="">Home</a>
+        <a class="btn btn-primary" href="oldstrategy">View Data</a>
+        <a class="btn btn-success" href="fileupload">Import New</a>
+        <a class="btn btn-primary" href="createstrategy">My New-Strategy</a>
+        <a class="btn btn-primary" href="Viewstrategies">View all Strategy</a>
+        <a class="btn btn-primary" href="tca">TCA</a>
+        <a class="btn btn-primary" href="viewtca">My TCA Views</a>
+        <a class="btn btn-primary" href="view_treatment">View all Treatement</a>
+        <a class="btn btn-primary" href="param_mapping">Param Mapping</a>
+
+
+    </div>
+    <!-- <p>Filtered HTML</p>
+<p>{{ years }}</p> -->
+    <div class="container">
+        <!-- <p class="text-center">{{ message }}</p> -->
+    </div>
+
+    <div class="container">
+        <!-- <centre><b>{{ return_message }}</b></centre> -->
+    </div>
+
+    <br>
+    <div class="container">
+
+
+        <table class="table table-dark table-hover">
+            <thead>
+                <tr>
+
+                    <th>Treatment Name</th>
+                    <th>Parameter Name</th>
+                    <th>Treatment By</th>
+                    <th>Math Operaters used</th>
+                    <th>Correlation</th>
+                    <th>Industry</th>
+
+                    <!-- <th>Weightage</th> -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for stat in Strat_list %}
+                <tr>
+                    <td>{{ stat.treatment_name }}</td>
+                    <td>{{ stat.strat_name }}</td>
+                    <td>{{ stat.treatment_by }}</td>
+                    <td>{{ stat.math_operators }}</td>
+                    <td>{{ stat.correlation }}</td>
+                    <td>{{ stat.industry }}</td>
+                    {% load quantapp_extras %}
+                    <td><a href="update_treatment?treat_id={{ stat|mongo_id }}">Edit</a></td>
+                    <td><a href="#">Delete</a></td>
+
+                </tr>
+                {% endfor %}
+
+            </tbody>
+        </table>
+
+
+
+
+        <!-- <div class="container">
+ <form method="post" action="filtered-data" enctype="multipart/form-data">{% csrf_token %}
+
+
+</form>
+</div>  -->
+
+
+
+
+
+
+
+</body>
+
+</html>

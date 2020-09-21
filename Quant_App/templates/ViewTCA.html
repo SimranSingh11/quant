@@ -1,0 +1,120 @@
+<!-- {{ get_list }} -->
+<!DOCTYPE html>
+<html>
+    {% csrf_token %}
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+  <div class="container">
+    <h3>Savart--Vantage-Quant</h3>
+  </div>
+  <br><br>
+
+  <div class="container">
+    <a class="btn btn-info" href="">Home</a>
+    <a class="btn btn-primary" href="oldstrategy">View Data</a>
+    <a class="btn btn-success" href="fileupload">Import New</a>
+    <a class="btn btn-primary" href="createstrategy">My New-Strategy</a>
+    <a class="btn btn-primary" href="Viewstrategies">View all Strategy</a>
+    <a class="btn btn-primary" href="tca">TCA</a>
+    <a class="btn btn-primary" href="viewtca">My TCA Views</a>
+
+</div>
+<!-- <p>Filtered HTML</p>
+<p>{{ years }}</p> -->
+<div class="container">
+    <p class="text-center"></p>
+</div>
+<div class="container">
+
+
+        <!-- <form method="post" action="viewtca" enctype="multipart/form-data">{% csrf_token %}
+            <select class="form-control" name="view_tca">
+                <option value="" disabled selected></option>
+                {% for param in params %}
+          
+                <option value="{{ param }}">
+                  {{param}}
+                </option>
+                {% endfor %}
+      
+              </select>
+              <br>
+      
+              <button type="submit">View Data</button>
+      
+            
+        </form> -->
+
+
+           
+        <table class="table">
+          <thead>
+            <tr>
+           
+              <th>TCA ID</th><td>{{ get_list.TCA_ID }}</td>
+
+            </tr>
+            <tr>
+              <th>Broker Name </th> <td>{{ get_list.Broker_Name }}</td>
+            </tr>
+            <tr>
+              <th>Country Name</th><td>{{ get_list.Country_Name }}</td>
+            </tr>
+            <tr>
+              <th>Purchase Currency</th> <td>{{ get_list.Purchase_Currency }}</td>
+            </tr>
+
+
+              <!-- {{ get_list }} -->
+       
+        
+          </thead>
+          <!-- <tbody>
+              
+            <tr>
+              
+            
+              
+              
+             
+              
+              
+            </tr>
+   
+      
+          </tbody> -->
+        </table>
+    
+       
+
+</div>
+
+<div class="container">
+    <p class="text-center">{{ list_tca_data }}</p>
+</div>
+
+<div class="container">
+    <p class="text-center">{{ table_content1 }}</p>
+</div>
+
+
+
+
+
+<!-- <div class="container">
+ <form method="post" action="filtered-data" enctype="multipart/form-data">{% csrf_token %}
+
+
+</form>
+</div>  -->
+
+
+</body>
+</html>
+

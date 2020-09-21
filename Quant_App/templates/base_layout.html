@@ -1,0 +1,169 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static '/css/main.css' %}">
+    <title>Home Screen</title>
+</head>
+<body>
+
+  <div class="headerWrap">
+    <div class="header">
+
+      <div class="header__logo">
+        <div class="logo_bold">Vantage</div>
+        <div class="logo_light">Quant</div>
+      </div>
+        
+        
+        
+        
+      <div class="header__noti">
+        <a href="#" onclick="showNotifications()"><img class="avatar" src="{% static '/img/bell.png' %}" id="bell" width="20" height="20"></a>
+        <div class="header__noti--badge">5</div>
+        <div class="notification">
+          <div id="notification__content">
+            
+            <div class="notification__content--box">
+              <img src="{% static '/img/profile1.jpg' %}" class="notification__content--icon">
+              <div class="notification__content--txt"> Lorem ipsum dolor sit amet consectetur adipisicing elit. A, voluptas.
+                <div class="notification__content--date">3 hours ago</div>
+              </div>
+            </div>
+            
+            <div class="notification__content--box">
+              <img src="{% static '/img/profile2.jpg' %}" class="notification__content--icon">
+              <div class="notification__content--txt"> Lorem ipsum dolor sit amet consectetur adipisicing elit. A, voluptas.
+                <div class="notification__content--date">3 hours ago</div>
+              </div>
+            </div>
+            
+            <div class="notification__content--box">
+              <img src="{% static '/img/profile1.jpg' %}" class="notification__content--icon">
+              <div class="notification__content--txt"> Lorem ipsum dolor sit amet consectetur adipisicing elit. A, voluptas.
+                <div class="notification__content--date">3 hours ago</div>
+              </div>
+            </div>
+            
+            <div class="notification__content--box">
+              <img src="{% static '/img/profile2.jpg' %}"  class="notification__content--icon">
+              <div class="notification__content--txt"> Lorem ipsum dolor sit amet consectetur adipisicing elit. A, voluptas.
+                <div class="notification__content--date">3 hours ago</div>
+              </div>
+            </div>
+            <div class="notification__txt">
+              <a href="notification.htm">View All Notifications</a>
+            </div>
+
+          </div>
+
+          </div>
+      </div>
+
+          <ul class="header__links">
+            <!-- <li class=""><a href="notification.htm"><img src="img/bell.svg" width="20" height="20"></a></li> -->
+            <li class=""><a href="settings.htm">Settings</a></li>
+            <li class=""><a href="index.htm">Sign out</a></li>
+          </ul>
+  
+  
+  
+          <div class="lower">
+            <label for="op">
+            <div class="header__burger">
+            <div class="line1"></div>
+            <div class="line2"></div>
+            <div class="line3"></div>
+         </div></label>
+        </div>
+      
+  
+      </div>
+    </div>
+
+
+    <div class="content">
+      <div class="nav1">
+        
+        <div class="nav1__items">
+
+          <div class="nav1__item">
+            <img class="nav1__applogo" src="{% static '/img/quant.png' %}" alt="">
+            <div class="nav1__name">Quant</div>
+          </div>
+  
+          <div class="nav1__item">
+            <img class="nav1__applogo" src="{% static '/img/iris.png' %}" alt="">
+            <div class="nav1__name">Iris</div>
+          </div>
+  
+          <div class="nav1__item">
+            <img class="nav1__applogo" src="{% static '/img/synapse.png' %}" alt="">
+            <div class="nav1__name">Synapse</div>
+          </div>
+        </div>
+
+      </div><!-- Nav 1 ends -->
+
+      <div class="nav2">
+        <div class="nav2__content">
+
+          <div class="nav2__content--item selected">
+            <img src="{% static '/img/strategy.png' %}" class="nav2__content--icon">
+            <a href="Viewstrategies" class="nav2__content--link">SM</a>
+            <div class="nav2__content--txt">Strategy Manager<br><span class="nav2__content--subTxt">Snapshot of current status</span></div>
+          </div>
+
+          <div class="nav2__content--item">
+            <img src="{% static '/img/dataZen.png' %}" class="nav2__content--icon">
+            <a href="dataZen.htm" class="nav2__content--link">SM</a>
+            <div class="nav2__content--txt">DataZen<br><span class="nav2__content--subTxt">Snapshot of current status</span></div>
+          </div>
+
+          <div class="nav2__content--item">
+            <img src="{% static '/img/tca.png' %}" class="nav2__content--icon">
+            <a href="tca.htm" class="nav2__content--link">SM</a>
+            <div class="nav2__content--txt">Transaction Cost Analysis<br><span class="nav2__content--subTxt">Snapshot of current status</span></div>
+          </div>
+
+          <div class="nav2__content--item">
+            <img src="{% static '/img/engine.png' %}" class="nav2__content--icon">
+            <a href="engine.htm" class="nav2__content--link">SM</a>
+            <div class="nav2__content--txt">Engine<br><span class="nav2__content--subTxt">Snapshot of current status</span></div>
+          </div>
+
+          <div class="nav2__content--item">
+            <img src="{% static '/img/output.png' %}" class="nav2__content--icon">
+            <a href="output.htm" class="nav2__content--link">SM</a>
+            <div class="nav2__content--txt">Output<br><span class="nav2__content--subTxt">Snapshot of current status</span></div>
+          </div>
+
+          <div class="nav2__content--item">
+            <img src="{% static '/img/visualization.png' %}" class="nav2__content--icon">
+            <a href="Visual.htm" class="nav2__content--link">SM</a>
+            <div class="nav2__content--txt">Visualization<br><span class="nav2__content--subTxt">Snapshot of current status</span></div>
+          </div>
+
+
+
+          <div class="select">
+            <select class="select__input" id="selTheme">
+                <option value="auto">Auto - System</option>
+                <option value="light">Light Theme</option>
+                <option value="dark">Dark Theme</option>
+            </select>
+        </div>
+          
+        </div>
+      </div><!-- Nav 2 ends -->
+
+          {% block content %}
+     {% endblock %}
+
+      <script src="{% static '/js/switchMode.js' %}"></script>
+      <script src="{% static '/js/notification.js' %}"></script>    
+
+</body>
+</html>

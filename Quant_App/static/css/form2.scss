@@ -1,0 +1,165 @@
+  .rwd > div {
+    clear: both;
+    overflow: hidden;
+    padding: 1px;
+    margin: 0 0 10px 0;
+  }
+  .rwd > div > fieldset > div > div {
+    margin: 0 0 5px 0;
+  }
+  .rwd > div > label,
+  legend {
+      width: 25%;
+    float: left;
+    padding: 8px;
+    color:var(--form_field);
+  }
+  .rwd > div > div,
+  .rwd > div > fieldset > div {
+    width: 75%;
+    float: right;
+  }
+  .rwd > div > fieldset label {
+      font-size: 90%;
+  }
+  fieldset {
+      border: 0;
+    padding: 0;
+  }
+  
+  .rwd input[type=text],
+  .rwd input[type=email],
+  .rwd input[type=url],
+  .rwd input[type=password],
+  .rwd textarea {
+    width: 500px;
+    max-width: 80%;
+ 
+
+
+
+
+}
+.rwd input[type=text],
+.rwd input[type=email],
+.rwd input[type=url],
+.rwd select,
+.rwd textarea,
+.rwd input[type=password] {
+    width: 500px;
+    max-width: 80%;
+    border-radius: .3em;
+    border: 1px solid #ccc;
+    padding: 6px 6px 6px 6px;
+    background: #fff;
+    font-size: .8rem;
+    font-family: sans-serif;
+    font-weight: 400;
+    transition: all 0.50s ease-in-out;
+    -webkit-transition: all 0.50s ease-in-out;
+    -moz-transition: all 0.50s ease-in-out;
+
+    color: var(--txt-box-txt);
+    background-color: var(--txt-box);
+
+  }
+.rwd input[type=text]:focus,
+.rwd input[type=email]:focus,
+.rwd input[type=url]:focus,
+.rwd input[type=password]:focus,
+.rwd textarea:focus {
+    outline: 0;
+    border-color: #4697e4;
+  }
+  
+  @media (max-width: 600px) {
+
+    .rwd > div {
+      margin: 0 0 6px 0;
+      max-width: 100vw;
+    }
+    .rwd > div > label,
+    legend {
+      width: 100%;
+      max-width: 80vw;
+      float: none;
+      margin: 0 0 0px 0;
+    }
+    .rwd > div > div,
+    .rwd > div > fieldset > div {
+      width: 100%;
+      max-width: 100vw;
+      float: none;
+    }
+    .rwd input[type=text],
+    .rwd input[type=email],
+    .rwd input[type=url],
+    .rwd input[type=password],
+    .rwd textarea,
+    .rwd select {
+      width: 100%;
+      max-width: 100vw;
+      // margin: 6px 0px;
+    }
+
+    .rwd > div > label, legend {
+      padding:0;
+    }
+
+    // .bttn {
+    //   width:98%;
+    // }
+
+    .rwd input[type=text],
+    .rwd input[type=email],
+    .rwd input[type=url],
+    .rwd select,
+    .rwd input[type=password] {
+      max-width: 100%;
+    }
+  }
+  @media (min-width: 1200px) {
+    .rwd > div > label,
+      legend {
+        text-align: right;
+        font-size: .9rem;
+        padding: 8px 10px;
+    }
+  }
+
+
+.rwd {
+  width: 640px;
+  max-width: 100%;
+  padding:10px 0;
+}
+
+.formItem_field {
+  color: var(--form_field);
+  font-weight: 500;
+}
+
+.formItem_txt {
+  padding: 4px 0 0 0px;
+  line-height: 1.6;
+  color: var(--form_value);
+}
+
+.formItem_txt--field {
+  text-align:left;
+}
+
+.formItem__small {
+  font-size:0.8rem;
+  color:#818181;
+}
+
+
+
+@media (max-width: 600px) {
+
+.formItem_txt {
+  padding:0;
+}
+
+}

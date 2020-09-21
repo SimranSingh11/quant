@@ -1,0 +1,109 @@
+{% extends 'base_layout.html' %}
+{% load static %}
+{% block content %}
+<div class="page">
+
+    <div class="page__title">
+      <img src="{% static '/img/strategy.png' %}" class="page__title--pic">
+      <span class="page__title--subHead">Vantage Quant</span>
+      <span class="page__title--txt">Strategy Manager</span>
+    </div>
+
+      <div class="topInfo">
+      <div class="search"><input type="textbox" class="searchBox__txt" placeholder="Search Strategies"></div>
+      <div class="bttn bttn_pri"><a href="strategyNew.htm">Create New Strategy</a></div>
+      </div>
+
+
+<div class="card_container">
+
+
+  {% for stat in Strat_list %}
+    <div class="card">
+      <div class="card__body">
+
+        <label class="card__like"><input type="checkbox" checked name="check"><span class="card__label--text"></span></label>
+        <div class="card__tag">{{ stat.ParamID }}</div>
+        <div class="card__title">{{ stat.StrategyName }}</div>
+        <!-- <div class="card__txt">Lorem ipsum, dolor sit amet nihil minus similique hic quas similique consectetur adipisicing elit. Aspernatur tenetur distinctio neque.</div> -->
+        <div class="card__txt">{{ stat.ParameterKey }}</div>
+        <div class="card__txt">{{ stat.Benchmark }}</div>
+        <div class="card__user">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSft5PLhaSb6QUdT0yRu3rjlam1Rt--WDJ6yQ&usqp=CAU" alt="" />
+            <div class="card__user--info">
+              <div class="card__user--name"> Lewis Daniels</div>
+              <div class="card__user--time"> 3 months ago</div>
+            </div>
+        </div>
+        <a href="strategyDetail.htm" class="card__link">View</a>
+
+    </div>
+    </div> <!-- card ends -->
+  {% endfor %}
+
+
+</div>
+<!-- Card Container ends -->
+
+
+
+
+
+
+
+
+
+
+
+<!-- RWD Menu Begins -->
+
+<input type="checkbox" class="menu" id="op"></input>
+<div class="lower">
+<label for="op"></label>
+</div>
+
+<div class="overlay overlay-hugeinc">
+<label for="op"><img src="img/close.png"></label>
+<div class="rwdMenu">
+  <a href="strategy.htm">Strategy Manager</a>
+  <a href="dataZen.htm">DataZen</a>
+  <a href="tca.htm">Transaction Cost Analysis</a>
+  <a href="engine.htm">Engine</a>
+  <a href="output.htm">Output</a>
+  <a href="visual.htm">Visualization</a>
+  <a href="settings.htm">Settings</a>
+  <a href="signout.htm">Sign-out</a>
+</div>
+</div>
+  
+<!-- RWD Menu Ends -->
+
+
+<!-- Notification -->
+
+<div id="noti">Notification Text</div>
+
+
+
+  </div>    <!-- Page Content ends -->
+  {% endblock %}    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

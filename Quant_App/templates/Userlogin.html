@@ -1,0 +1,122 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vantage Login</title>
+    <link rel="stylesheet" type="text/css" href="{% static '/css/main.css' %}">
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css" rel="stylesheet">
+</head>
+
+<!-- <body>
+    <center>
+        <h2>Savart Login</h2>
+    </center>
+
+
+    <center>
+        <button onclick="document.getElementById('id01').style.display='block'" style="width:auto;">Login</button>
+    </center>
+
+    <div id="id01" class="modal">
+
+        <form class="modal-content animate" action="" method="post">{% csrf_token %}
+            <div class="imgcontainer">
+                <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
+                <img src="savart.png" alt="Savart" class="avatar">
+            </div>
+
+            <div class="container">
+                <label for="uname"><b>Username</b></label>
+                <input type="text" placeholder="Enter Username" name="uname" required>
+
+                <label for="psw"><b>Password</b></label>
+                <input type="password" placeholder="Enter Password" name="psw" required>
+                <button type="submit">Login</button>
+
+
+            </div>
+
+
+            <div class="container" style="background-color:#f1f1f1">
+                <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
+                <span class="psw">Forgot <a href="#">password?</a></span>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Get the modal
+        var modal = document.getElementById('id01');
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+
+    {{ Message }}
+
+</body> -->
+
+
+
+<body>
+    <div class="headerWrap">
+        <div class="header">
+
+            <div class="header__logo">
+                <div class="logo_bold">Vantage</div>
+                <div class="logo_light">Quant</div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div class="loginWrap">
+
+
+        <div class="login">
+            <div class="login__title">Login</div>
+            <form class="modal-content animate" action="" method="post">{% csrf_token %}
+
+                <div class="group">
+                    <input type="text" class="login__txtBox" placeholder="Username" name="uname" autofocus />
+                    <!-- <label class="txtbox">Email</label> -->
+                </div>
+
+
+                <div class="group">
+                    <input type="password" class="login__txtBox" placeholder="Password" name="psw" />
+                    <!-- <label class="txtbox">Password</label> -->
+                </div>
+
+                <label class="login__chkBox">
+                <input type="checkbox" name="check"><span class="label-text1 login_font"> Remember Me </span></label>
+
+                <button type="submit" class="login__btn">Login</button>
+                <!-- switch to button or input in development -->
+
+
+                <a href="#" class="login__btn2">Forgot Password</a>
+                <a href="signUp.htm" class="login__btn2">Sign Up</a>
+            </form>
+        </div>
+
+    </div>
+
+    <script src="{% static '/js/switchMode.js' %}"></script>
+    <script src="{% static '/js/notification.js' %}"></script>
+
+
+
+</body>
+
+</html>

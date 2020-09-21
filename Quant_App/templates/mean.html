@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+    {% csrf_token %}
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+  <h2>Savart </h2>
+  <p>MEAN of Each parameter</p> 
+  
+  <p><a href="/">Home</a></p>    
+  <div class="table-responsive">          
+    <table class="table">
+        <thead>
+          <tr>
+            {% for item in dataframe %}
+            <th> {{ item.0 }}</th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+            
+          <tr>
+            {% for item in dataframe %}
+            <td>{{ item.1 }}</td>
+            {% endfor %}
+    
+          </tr>
+      
+        </tbody>
+    </table>
+  </div>
+
+  <br>
+  <p>MEDIAN of Each parameter</p> 
+<div class="table-responsive">          
+  <table class="table">
+      <thead>
+        <tr>
+          {% for item in median_df %}
+          <th> {{ item.0 }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+          
+        <tr>
+          {% for item in median_df %}
+          <td>{{ item.1 }}</td>
+          {% endfor %}
+  
+        </tr>
+    
+      </tbody>
+  </table>
+</div>
+</div>
+
+
+
+</body>
+</html>
+
+
+
+
+
+
+<!-- <p>CLean mean</p>
+<br><br>
+<p>{{cl_m}}</p>
+<br><br>
+<p>{{df3}}</p>
+
+<br><br>
+<p>{{df5}}</p>
+<br><br>
+<h2>Dataframe</h2>
+{% autoescape on %}
+    {{ df5 }}
+{% endautoescape %}
+
+<p>
+    {{dataframe}}
+</p>
+
+<p>
+<table>
+   
+    
+    {% for item in dataframe %}
+    <tr>
+        {{ item.0 }}
+    </tr>
+    <tr>
+        {{ item.1}}
+    </tr>
+    {% endfor %}
+</table>       
+</p>
+
+<table class="table">
+    <thead>
+      <tr>
+        {% for item in dataframe %}
+        <th> {{ item.0 }}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+        
+      <tr>
+        {% for item in dataframe %}
+        <td>{{ item.1 }}</td>
+        {% endfor %}
+
+
+      </tr>
+  
+    </tbody>
+  </table>
+ -->

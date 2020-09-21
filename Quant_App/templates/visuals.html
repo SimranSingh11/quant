@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Savart-Vantage Quant</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <!-- Css and js -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.0.5/css/adminlte.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+
+
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-alpha1/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.0.5/js/adminlte.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.0.5/js/demo.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js'></script>
+</head>
+
+<body>
+    <br>
+    <div class="container">
+        <a class="btn btn-info" href="">Home</a>
+        <a class="btn btn-primary" href="oldstrategy">View Data</a>
+        <a class="btn btn-success" href="fileupload">Import New</a>
+        <a class="btn btn-primary" href="createstrategy">My New-Strategy</a>
+        <a class="btn btn-primary" href="Viewstrategies">View all Strategy</a>
+        <a class="btn btn-primary" href="tca">TCA</a>
+        <a class="btn btn-primary" href="viewtca">My TCA Views</a>
+        <a class="btn btn-primary" href="view_treatment">View all Treatement</a>
+        <a class="btn btn-primary" href="param_mapping">Param Mapping</a>
+
+
+
+    </div>
+    <br>
+    <!-- Stratergy name -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>{{ strategyname }}</h1>
+                </div>
+            </div>
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+    <!-- <div class="content-wrapper"> -->
+    <section class="content">
+        <form method="post" action="visual" enctype="multipart/form-data">{% csrf_token %}
+            <div class="container-fluid">
+                <!-- SELECT2 EXAMPLE -->
+                <div class="row">
+                    <!-- <div class="col-sm-3">
+                            <div class="form-group">
+                                <label>Files names  :    </label>
+                                <select class="form-control select2" style="width: 50%;" id="file_name" name="file_name">
+                                    {% for param in params %}
+                                    <option value="{{ param }}">
+                                      {{param}}
+                                    </option>
+                                    {% endfor %}
+        
+                            </select>
+                            </div>
+
+                        </div> -->
+
+
+                    <!-- START ACCORDION & CAROUSEL-->
+
+
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <h3 class="card-title">Visuals Representation of Treatments</h3>
+                                    </div>
+                                    <!-- /.col -->
+                                    <div class="col-sm-4">
+                                        <!-- /.form-group -->
+                                        <div class="form-group">
+                                            <label>Treatment name  :  </label>
+                                            <select class="form-control select2" style="width: 50%;" id="treatment_id" name="treatment_id" onChange="getParam(this.value);">
+                                                {% for treat in treatments %}
+                                                {% load quantapp_extras %}
+                                                <option value="{{ treat|mongo_id }}">
+                                                {{ treat.treatment_name }}
+                                                </option>
+                                                {% endfor %}
+                                        
+                                                </select>
+
+                                        </div>
+                                        <!-- /.form-group -->
+                                    </div>
+
+                                    <div class="col-sm-2">
+                                        <div class="form-group">
+                                            <button type="submit" class="btn btn-primary">Submit</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body">
+                                <div id="accordion">
+                                    <!-- we are adding the .class so bootstrap.js collapse plugin detects it -->
+                                    <div class="card card-primary">
+                                        <div class="card-header">
+                                            <h4 class="card-title">
+                                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                                           Combinational Quartiles Q1
+                                                    </a>
+                                            </h4>
+                                        </div>
+
+                                        <canvas id="combination" width="1000" height="400"></canvas>
+
+                                        <div id="collapseOne" class="panel-collapse collapse in">
+                                            <div class="card-body">
+                                                {% autoescape off %} {{ combination_df_altered }} {% endautoescape %}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="card card-danger">
+                                        <div class="card-header">
+                                            <h4 class="card-title">
+                                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+                                                        Unique combination Quartiles Q1
+                                                    </a>
+                                            </h4>
+                                        </div>
+
+                                        <canvas id="unique" width="1000" height="400"></canvas>
+
+                                        <div id="collapseTwo" class="panel-collapse collapse">
+                                            <div class="card-body">
+                                                {% autoescape off %} {{ unique_df_altered }} {% endautoescape %}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                        <!-- /.card -->
+                        <!-- <div class="row">
+                            <div class="col-sm-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4 class="card-title">
+                                            <a data-toggle="collapse" href="#collapseThree">
+                                            Company Wise Shareprice appreciation for Q1
+                                        </a>
+                                        </h4>
+                                    </div>
+                                    <canvas id="treatment" width="800" height="400"></canvas>
+
+                                    <div id="collapseThree" class="panel-collapse collapse">
+                                        <div class="card-body">
+                                            {% autoescape off %} {{ treatment_df_altered }} {% endautoescape %}
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div> -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- AREA CHART -->
+                                <div class="card card-primary">
+                                    <div class="card-header">
+                                        <h3 class="card-title">
+
+                                            <a data-toggle="collapse" href="#collapseThree">
+                                                Company Wise Shareprice appreciation for Q1
+                                            </a>
+                                        </h3>
+                                    </div>
+                                    <div class="card-body">
+
+                                        <canvas id="treatment" width="800" height="400"></canvas>
+                                    </div>
+                                    <div id="collapseThree" class="panel-collapse collapse">
+                                        <div class="card-body">
+                                            {% autoescape off %} {{ treatment_df_altered }} {% endautoescape %}
+
+                                        </div>
+                                    </div>
+                                    <!-- /.card-body -->
+                                </div>
+                                <!-- /.card -->
+
+                                <!-- DONUT CHART -->
+                                <div class="card card-danger">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Donut Chart</h3>
+
+                                        <div class="card-tools">
+                                            <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                                    </button>
+                                            <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="donutChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                                    </div>
+                                    <!-- /.card-body -->
+                                </div>
+                                <!-- /.card -->
+
+                                <!-- PIE CHART -->
+                                <div class="card card-danger">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Pie Chart</h3>
+
+                                        <div class="card-tools">
+                                            <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                                    </button>
+                                            <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="pieChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                                    </div>
+                                    <!-- /.card-body -->
+                                </div>
+                                <!-- /.card -->
+
+                            </div>
+                            <!-- /.col (LEFT) -->
+                            <div class="col-md-6">
+                                <!-- LINE CHART -->
+                                <div class="card card-info">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Line Chart</h3>
+
+                                        <div class="card-tools">
+                                            <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                                    </button>
+                                            <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="chart">
+                                            <canvas id="lineChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                                        </div>
+                                    </div>
+                                    <!-- /.card-body -->
+                                </div>
+                                <!-- /.card -->
+
+                                <!-- BAR CHART -->
+                                <div class="card card-success">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Bar Chart</h3>
+
+                                        <div class="card-tools">
+                                            <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                                    </button>
+                                            <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="chart">
+                                            <canvas id="barChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                                        </div>
+                                    </div>
+                                    <!-- /.card-body -->
+                                </div>
+                                <!-- /.card -->
+
+                                <!-- STACKED BAR CHART -->
+                                <div class="card card-success">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Stacked Bar Chart</h3>
+
+                                        <div class="card-tools">
+                                            <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                                    </button>
+                                            <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="chart">
+                                            <canvas id="stackedBarChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                                        </div>
+                                    </div>
+                                    <!-- /.card-body -->
+                                </div>
+                                <!-- /.card -->
+
+                            </div>
+                            <!-- /.col (RIGHT) -->
+                        </div>
+
+                    </div>
+
+
+
+
+                    <!-- /.col -->
+                </div>
+
+                <!-- /.card -->
+        </form>
+
+        <div class="card-body">
+            <!-- <label>Combination Quartiles Q1</label> -->
+            <input type="hidden" value="{{x_axis_treat}}" id="x_axis_treatment_list">
+
+        </div>
+
+
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+    <!-- </div> -->
+
+
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#example').DataTable();
+        });
+        $(document).ready(function() {
+            $('#treatment_id').select2();
+        });
+        $(document).ready(function() {
+            $('#file_name').select2();
+        });
+        $(document).ready(function() {
+            $('#parameter').select2();
+        });
+
+        // ajax request for dependent dropdown
+        function getParam(val) {
+            $("#parameter").val("");
+            $.ajax({
+                type: "GET",
+                url: "GetParamsByTreatmentId/" + val,
+                success: function(result) {
+                    console.log(result)
+                    $.each(result, function(key, val) {
+                        //Here is where I want to parse each object and add to the HTML table
+                        $('#parameter').append(`<option value="${val}"> 
+                                       ${val} 
+                                  </option>`);
+                    });
+                }
+            });
+        }
+
+
+
+
+        // bar chart data
+        var barData = {
+                labels: JSON.parse("{{x_axis_com}}"),
+                datasets: [{
+                    fillColor: "#48A497",
+                    strokeColor: "#48A4D1",
+                    data: JSON.parse("{{y_axis_com}}")
+                }]
+            }
+            // get bar chart canvas
+        var chart_com = document.getElementById("combination").getContext("2d");
+        // draw bar chart
+        new Chart(chart_com).Bar(barData);
+
+
+        // bar chart data
+        var barData1 = {
+                labels: JSON.parse("{{x_axis_unique}}"),
+                datasets: [{
+                    fillColor: "#48A497",
+                    strokeColor: "#48A4D1",
+                    data: JSON.parse("{{y_axis_unique}}")
+                }]
+            }
+            // get bar chart canvas
+        var chart_uni = document.getElementById("unique").getContext("2d");
+        // draw bar chart
+        new Chart(chart_uni).Bar(barData1);
+
+
+        var list = $("#x_axis_treatment_list").val()
+        console.log(list)
+            // bar chart data
+        var barData2 = {
+                labels: list.split(','),
+                datasets: [{
+                    fillColor: "#48A497",
+                    strokeColor: "#48A4D1",
+                    data: JSON.parse("{{y_axis_treat}}")
+                }]
+            }
+            // get bar chart canvas
+        var chart_treat = document.getElementById("treatment").getContext("2d");
+        // draw bar chart
+        new Chart(chart_treat).Bar(barData2);
+
+
+        var donutChartCanvas = $('#donutChart').get(0).getContext('2d')
+        var donutData = {
+            labels: [
+                'Chrome',
+                'IE',
+                'FireFox',
+                'Safari',
+                'Opera',
+                'Navigator',
+            ],
+            datasets: [{
+                data: [700, 500, 400, 600, 300, 100],
+                backgroundColor: ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de'],
+            }]
+        }
+        var donutOptions = {
+                maintainAspectRatio: false,
+                responsive: true,
+            }
+            //Create pie or douhnut chart
+            // You can switch between pie and douhnut using the method below.
+        var donutChart = new Chart(donutChartCanvas, {
+            type: 'doughnut',
+            data: donutData,
+            options: donutOptions
+        })
+    </script>
+
+</body>
+
+</html>

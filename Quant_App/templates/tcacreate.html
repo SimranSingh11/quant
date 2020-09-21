@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+    {% csrf_token %}
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+  <div class="container">
+    <h3>Savart--Vantage-Quant</h3>
+  </div>
+  <br><br>
+
+  <div class="container">
+    <a class="btn btn-info" href="">Home</a>
+    <a class="btn btn-primary" href="oldstrategy">View Data</a>
+    <a class="btn btn-success" href="fileupload">Import New</a>
+    <a class="btn btn-primary" href="createstrategy">My New-Strategy</a>
+    <a class="btn btn-primary" href="Viewstrategies">View all Strategy</a>
+    <a class="btn btn-primary" href="tca">TCA</a>
+    <a class="btn btn-primary" href="viewtca">My TCA Views</a>
+
+
+</div>
+<!-- <p>Filtered HTML</p>
+<p>{{ years }}</p> -->
+<div class="container">
+    <p class="text-center">{{ tca_message }}</p>
+</div>
+<div class="container">
+        <form method="post" action="tca" enctype="multipart/form-data">{% csrf_token %}
+            <!-- <div class="form-group"> -->
+            <label for="formGroupExampleInput">Broker Name:</label>
+                <select class="form-control" name="brokername">
+                    <option value="" disabled selected></option>
+                    <option value="Money Control">
+                    Money Control
+                    </option>
+                    <option value="Zerodha">
+                    Zerodha
+                    </option>
+                </select>
+            <label for="coun">Select Country:</label>
+            <select class="form-control" name="countryname">
+                <option value="" disabled selected></option>
+                <option value="INDIA">
+                    India
+                </option>
+                <option value="USA">
+                    USA
+                </option>
+                <option value="CANADA">
+                    Canada
+                </option>
+            </select>
+            <label for="coun">Purchase Currency:</label>
+            <select class="form-control" name="purchasecurrency">
+                <option value="" disabled selected></option>
+                <option value="Rupees">
+                    Rupees
+                </option>
+                <option value="Dollars">
+                    Dollars
+                </option>
+            </select>
+            <label for="coun">Investee Currency:</label>
+            <select class="form-control" name="investeecurrency">
+                <option value="" disabled selected></option>
+                <option value="Rupee">
+                    Rupees
+                </option>
+                <option value="Dollar">
+                    Dollars
+                </option>
+            </select>
+            <label for="usr">Delivery brokerage:</label>
+            <input type="text" class="form-control" id="usr" name="deliverybrokage">
+
+            <label for="usr">LTCG Tax</label>
+            <input type="text" class="form-control" id="usr" name="ltcgtax">
+
+            <label for="usr">All other charges</label>
+            <input type="text" class="form-control" id="usr" name="othercharges">
+
+
+            <label for="coun">Purchase Type</label>
+            <select class="form-control" name="purchasetype">
+                <option value="" disabled selected></option>
+                <option value="Full">
+                    Full 
+                </option>
+                <option value="Specific">
+                    Specific
+                </option>
+            </select>
+
+
+            <label for="usr"> Purchase Rate</label>
+            <input type="text" class="form-control" id="usr" name="purchaserate">
+
+            <label for="usr"> Quantity</label>
+            <input type="text" class="form-control" id="usr" name="quantity">
+
+            <label for="usr">Comments</label>
+            <input type="text" class="form-control" id="usr" name="comments">
+
+            <br/>
+            <button type="submit">Save</button>
+
+            
+            <!-- </div> -->
+        </form>
+
+</div>
+
+
+
+
+
+<!-- <div class="container">
+ <form method="post" action="filtered-data" enctype="multipart/form-data">{% csrf_token %}
+
+
+</form>
+</div>  -->
+
+
+</body>
+</html>
+

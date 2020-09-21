@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Savart-Vantage Quant</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <!-- Css and js -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.5/css/responsive.bootstrap4.min.css">
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.5/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.5/js/responsive.bootstrap4.min.js"></script>
+</head>
+
+<body>
+    <br>
+    <div class="container">
+        <a class="btn btn-info" href="">Home</a>
+        <a class="btn btn-primary" href="oldstrategy">View Data</a>
+        <a class="btn btn-success" href="fileupload">Import New</a>
+        <a class="btn btn-primary" href="createstrategy">My New-Strategy</a>
+        <a class="btn btn-primary" href="Viewstrategies">View all Strategy</a>
+        <a class="btn btn-primary" href="tca">TCA</a>
+        <a class="btn btn-primary" href="viewtca">My TCA Views</a>
+        <a class="btn btn-primary" href="view_treatment">View all Treatement</a>
+        <a class="btn btn-primary" href="param_mapping">Param Mapping</a>
+
+
+    </div>
+    <br>
+    <!-- Stratergy name -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>{{ get_list.strat_name }}</h1>
+                </div>
+            </div>
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+    <div class="content-wrapper">
+        <section class="content">
+            <form method="post" action="update_treatment_detail" enctype="multipart/form-data">{% csrf_token %}
+                <div class="container-fluid">
+                    <!-- SELECT2 EXAMPLE -->
+                    <div class="row">
+                        {{ get_list }}
+                        <div class="col-sm-6">
+                            {% load quantapp_extras %}
+                            <input type="hidden" name="treat_id" value="{{ get_list|mongo_id }}">
+                            <div class="form-group">
+                                <label>Treatment By</label>
+                                <select class="form-control select2" style="width: 50%;" name="treatment_by">
+                                <option value="Client" {% if get_list.treatment_by == 'Client' %}selected="selected"{% endif %}>Client</option>
+                                <option value="User" {% if get_list.treatment_by == 'User' %}selected="selected"{% endif %}>User</option>
+        
+                            </select>
+                            </div>
+                            <!-- /.form-group -->
+                            <div class="form-group">
+                                <label>Correlation</label>
+                                <select class="form-control select2" style="width: 50%;" name="correlation">
+                                <option value="Positive" {% if get_list.correlation == 'Positive' %}selected="selected"{% endif %}>Positive</option>
+                                <option value="Negative" {% if get_list.correlation == 'Negative' %}selected="selected"{% endif %}>Negative</option>
+                            </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Treatment Name</label>
+                                <input class="form-control" type="text" style="width: 50%;" value="{{ get_list.treatment_name }}" name="treatment_name">
+                            </div>
+                            <!-- /.form-group -->
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-sm-6">
+                            <!-- /.form-group -->
+                            <div class="form-group">
+                                <label>Math Operators</label>
+                                <select class="form-control select2" style="width: 50%;" name="math_operators">
+                                <option value="Plus" {% if get_list.math_operators == 'Negative' %}selected="selected"{% endif %}>Plus</option>
+                                <option value="Minus" {% if get_list.math_operators == 'Minus' %}selected="selected"{% endif %}>Minus</option>
+                                <option value="Division" {% if get_list.math_operators == 'Division' %}selected="selected"{% endif %}>Division</option>
+                                <option value="Multiplication" {% if get_list.math_operators == 'Multiplication' %}selected="selected"{% endif %}>Multiplication</option>
+                            
+                            </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Industry</label>
+                                <select class="form-control select2" style="width: 50%;" name="industry">
+                                <option value="Manufacturing" {% if get_list.industry == 'Manufacturing' %}selected="selected"{% endif %}>Manufacturing</option>
+                                <option value="Information Technology" {% if get_list.industry == 'Information Technology' %}selected="selected"{% endif %}>Information Technology</option>
+                                <option value="Transport" {% if get_list.industry == 'Transport' %}selected="selected"{% endif %}>Transport</option>
+                                <option value="Telecommunication" {% if get_list.industry == 'Telecommunication' %}selected="selected"{% endif %}>Telecommunication</option>
+                                <option value="Agriculture" {% if get_list.industry == 'Agriculture' %}selected="selected"{% endif %}>Agriculture</option>
+                                <option value="Construction" {% if get_list.industry == 'Construction' %}selected="selected"{% endif %}>Construction</option>
+                                <option value="Education" {% if get_list.industry == 'Education' %}selected="selected"{% endif %}>Education</option>
+                            </select>
+                            </div>
+                            <!-- /.form-group -->
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.card -->
+
+                    <div class="card-body">
+
+                        <table id="example" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Parameters</th>
+                                    <th>Weightage</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for param in get_params_list %}
+                                <tr>
+                                    <td>{{ param.param_name }}</td>
+
+                                    <td>
+                                        {% load quantapp_extras %}
+                                        <input type="hidden" value="{{ param|mongo_id }}" name="param_id">
+                                        <input type="number" name="wieghtage" id="wieghtage" value="{{ param.wieghtage }}">
+
+                                    </td>
+                                </tr>
+                                {% endfor %}
+
+                            </tbody>
+                        </table>
+
+                        <button type="submit">Update Treatment</button>
+                    </div>
+
+
+                </div>
+                <!-- /.container-fluid -->
+            </form>
+        </section>
+    </div>
+
+
+
+
+
+    <script>
+        $(document).ready(function() {
+            $('#example').DataTable();
+        });
+    </script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;1,100;1,300;1,400;1,500&display=swap');
+
+@import "switchMode.css";
+@import "form.css";
+@import "form2.css";
+@import "header.css";
+@import "layout.css";
+@import "card.css";
+@import "menu.css";
+@import "multiStep.css";
+@import "tab.css";
+@import "upload.css";
+@import "notification.css";
+@import "dataTable_custom.css";
+@import "panel.css";
+@import "accordion.css";
+@import "chkBox.css";
+@import "table.css";
+
+* {
+  padding:0;
+  margin:0;
+  box-sizing: border-box;
+}
+
+
+
+
+
+/* Notes - delete later*/
+/* @import "mobstyle.css" screen and (max-width: 768px); */
+/* @import "printstyle.css" print; */
+/* @import "navigation.css"; Using a string */
+/* @import url("navigation.css"); Using a url */

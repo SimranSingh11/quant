@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Savart-Vantage Quant</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <!-- Css and js -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.5/css/responsive.bootstrap4.min.css">
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.5/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.5/js/responsive.bootstrap4.min.js"></script>
+</head>
+
+<body>
+    <br>
+    <div class="container">
+        <a class="btn btn-info" href="">Home</a>
+        <a class="btn btn-primary" href="oldstrategy">View Data</a>
+        <a class="btn btn-success" href="fileupload">Import New</a>
+        <a class="btn btn-primary" href="createstrategy">My New-Strategy</a>
+        <a class="btn btn-primary" href="Viewstrategies">View all Strategy</a>
+        <a class="btn btn-primary" href="tca">TCA</a>
+        <a class="btn btn-primary" href="viewtca">My TCA Views</a>
+        <a class="btn btn-primary" href="view_treatment">View all Treatement</a>
+        <a class="btn btn-primary" href="param_mapping">Param Mapping</a>
+        <a class="btn btn-primary" href="risk_returns">Return & Risks View</a>
+
+
+    </div>
+    <br>
+    <!-- Stratergy name -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>{{ strategyname }}</h1>
+                </div>
+            </div>
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+    <div class="content-wrapper">
+        <section class="content">
+            <form method="post" action="upload_risk_return_file" enctype="multipart/form-data">{% csrf_token %}
+                <div class="container-fluid">
+                    <!-- SELECT2 EXAMPLE -->
+                    <input type="file" name="file">
+                    <div class="row">
+                        <div class="col-sm-6">
+
+                            <!-- /.form-group -->
+                            <!-- <div class="form-group">
+                                <label>Treatement Names</label>
+                                <select class="form-control" name="file_name" id="file_name" onChange="getParam(this.value);">
+                                    <option value="">Select File</option>
+                                    {% for treates in treatments %}
+                                    {% load quantapp_extras %}
+                                    <option value="{{ treates|mongo_id }}">
+                                      {{treates.treatment_name}}
+                                    </option>
+                                    {% endfor %}
+                          
+                                  </select>
+                            </div> -->
+
+                            <div class="form-group">
+                                <label>Output Measure</label>
+                                <select class="form-control" name="file_name" id="file_name">
+                                    <option value="">Select File</option>
+                                    {% for returns in return_risks %}
+                                    <option value="{{ returns }}">
+                                      {{returns}}
+                                    </option>
+                                    {% endfor %}
+                          
+                                  </select>
+                            </div>
+                            <!-- /.form-group -->
+                            <input type="submit" value="Submit" />
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.card -->
+
+                    <div class="container">
+                        {% autoescape off %} {{ computation_df }} {% endautoescape %}
+                    </div>
+
+
+
+
+
+                </div>
+                <!-- /.container-fluid -->
+            </form>
+        </section>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#example').DataTable();
+        });
+    </script>
+</body>
+
+</html>
