@@ -204,7 +204,7 @@ class DatalayersClass():
             mycol.insert({"id":"User1","ParamID":i,"dataframe":data_dict})
     
     ## 22/07/2020 For Strategies creation...
-    def insert_creatstrategy(paramdata,newstrategy,strategyname,parameterkey,Benchmark):
+    def insert_creatstrategy(paramdata,newstrategy,strategyname,parameterkey,Benchmark,comments):
         message = BusinessLogicClass.check_Strategy_ByParamID(paramdata)
 
         print('This checking message',message)
@@ -214,14 +214,16 @@ class DatalayersClass():
         else:
             paramId = paramdata
             data_dict = newstrategy.to_dict("records")  ## converting into Dictionary from DF
-            mystrategies.insert({"id":"User1","ParamID":paramId,"StrategyName":strategyname,"ParameterKey":parameterkey,"Benchmark":Benchmark,"StrategyDF":data_dict})
+            mystrategies.insert({"id":"User1","ParamID":paramId,"StrategyName":strategyname,"ParameterKey":parameterkey,"Benchmark":Benchmark,"StrategyDF":data_dict,"Comments": comments})
             return True
     
     def insert_creattreatment(treatment_by, correlation, math_operators, industry, strategyname, treatment_name, wieghtage, param_name):
 
         response = treatment.insert({"strat_name":strategyname, "treatment_name":treatment_name, "treatment_by":treatment_by, "correlation":correlation, "math_operators": math_operators, "industry":industry})
         print("[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]", response)
-        execute_computations.delay(treatment_by, correlation, math_operators, industry, strategyname, treatment_name, wieghtage, param_name, str(response))
+        for (a, b) in zip(wieghtage, param_name):
+            treat_param.insert({"treatment_id":ObjectId(response), "wieghtage":a, "param_name":b })
+        # execute_computations.delay(treatment_by, correlation, math_operators, industry, strategyname, treatment_name, wieghtage, param_name, str(response))
         
         return True
 
@@ -270,6 +272,12 @@ class DatalayersClass():
         
         return Stratgies_list
     
+    def stratergy_by_id(strat_id):
+        stratergy_id = str(strat_id)
+        my_dict = mystrategies.find_one({'_id': ObjectId(stratergy_id) })
+
+        return my_dict
+    
     def get_dataframes_by_stratergyname(strat_name):
         StrategyName = str(strat_name)
         query = {"StrategyName":StrategyName}
@@ -292,13 +300,25 @@ class DatalayersClass():
         my_dict = treatment.find_one({'_id': ObjectId(paramId) })
 
         return my_dict
+
+    def get_benchmark_by_strat(strat_name):
+        my_dict = mystrategies.find_one({'StrategyName': strat_name })
+
+        return my_dict
     
+    def get_treatment_By_stratergy(strat_name):
+        my_dict = treatment.find({'strat_name': strat_name})
+        return my_dict
+
+
     def treatment_param_by_id(paramID):
         paramId = str(paramID)
         from bson.objectid import ObjectId 
         my_dict = treat_param.find({'treatment_id': ObjectId(paramId) })
         print("==========?", my_dict)
         return my_dict
+    
+
     
                           
     def insert_tca(unique_no,brokername,country_name,currency,Investee_currency,deliverybrokage,ltcgtax,othercharges,purchasetype,purchaserate,quantity,comments):
@@ -612,7 +632,7 @@ class BusinessLogicClass():
                 #print('Filename',read_i)
                 #read_i = os.getcwd() + "\\documents\\" + read_i
                 #print(read_i)
-                read_file = pd.read_excel(r"/home/simran/Desktop/Django/Vantage_Quant/" + read_i)
+                read_file = pd.read_excel(r"/home/simran/Desktop/Vantage_quant_copy/" + read_i)
                 #print('readedFiles')
                 convertedfile_name = 'Converted_'+ read_i.split('.')[0] + '.csv' 
                 read_csv = read_file.to_csv(convertedfile_name, index = None, header=True)
@@ -625,7 +645,7 @@ class BusinessLogicClass():
             elif read_i.split('.')[-1] == 'csv':
                 #print(read_i)
                 #df.append()
-                df = pd.read_csv(r"/home/simran/Desktop/Django/Vantage_Quant/" + read_i)
+                df = pd.read_csv(r"/home/simran/Desktop/Vantage_quant_copy/" + read_i)
                 #df = read_i.split('.')[0] + '_'  + 'DF'
                 dataframes.append(df)
         return dataframes

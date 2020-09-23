@@ -1,123 +1,98 @@
-<!DOCTYPE html>
-<html>
-{% csrf_token %}
+{% extends 'base_layout.html' %}
+{% load static %}
+{% block content %}
 
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <!-- Css and js -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.5/css/responsive.bootstrap4.min.css">
+      <div class="page">
 
+        <!-- Update Page Title -->
+        <div class="page__title">
+          <img src="{% static '/img/tca.png' %}" class="page__title--pic">
+          <span class="page__title--subHead">Stratergy Manager</span>
+          <span class="page__title--txt">Create New Strategy</span>
+        </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
-    <script src="https://cdn.datatables.net/responsive/2.2.5/js/dataTables.responsive.min.js"></script>
-    <script src="https://cdn.datatables.net/responsive/2.2.5/js/responsive.bootstrap4.min.js"></script>
-</head>
+        <!-- Content Begins -->
 
-<body>
+        <form method="post" class="rwd" action="createstrategy" enctype="multipart/form-data">{% csrf_token %}
+ 
 
-    <div class="container">
-        <h3>Savart--Vantage-Quant</h3>
-    </div>
-    <br><br>
+            <div class="formItem">
+                <label class="desc" id="title1" for="Field1">Strategy Name</label>
+                <div>
+                  <input id="Field1" name="strategyname" type="text" class="field" value="" size="8" tabindex="1">
+                </div>
+              </div>
 
-    <div class="container">
-        <a class="btn btn-info" href="">Home</a>
-        <a class="btn btn-primary" href="oldstrategy">View Data</a>
-        <a class="btn btn-success" href="fileupload">Import New</a>
-        <a class="btn btn-primary" href="createstrategy">My New-Strategy</a>
-        <a class="btn btn-primary" href="Viewstrategies">View all Strategy</a>
-        <a class="btn btn-primary" href="tca">TCA</a>
-        <a class="btn btn-primary" href="viewtca">My TCA Views</a>
-        <a class="btn btn-primary" href="view_treatment">View all Treatement</a>
+ 
 
+              <div class="formItem">
+                <label class="desc" id="title1" for="Field1">Data File</label>
+                <div>
+                    <select class="" tabindex="2" name="viewstrategydata" required="required">
+                      <option value="" disabled selected></option>
+                      {% for param in params %}
+                
+                      <option value="{{ param }}">
+                        {{param}}
+                      </option>
+                      {% endfor %}
 
-    </div>
-    <!-- <p>Filtered HTML</p>
-<p>{{ years }}</p> -->
-    <div class="container">
-        <p class="text-center">{{ message }}</p>
-    </div>
+                    </select>
+                </div>
+              </div>
 
-    <div class="container">
-        <form method="post" action="createstrategy" enctype="multipart/form-data">{% csrf_token %}
-            <select class="form-control" name="viewstrategydata">
-          <option value="" disabled selected></option>
-          {% for param in params %}
-    
-          <option value="{{ param }}">
-            {{param}}
-          </option>
-          {% endfor %}
+              <div class="formItem">
+                <label class="desc" id="title1" for="Field1">Parameters</label>
+                <div>
+                    <div>
+                        <select class="" tabindex="2" name="parameterkey" required="required">
+                            <option value="" disabled selected></option>
+                            <option value="Rows">
+                            Rows
+                            </option>
+                            <option value="Columns">
+                            columns
+                            </option>
+          
+                        </select>
+                        </select>
+                    </div>               
+                   </div>
+              </div>
 
-        </select>
-            <br>
-            <div class="form-group">
-                <label for="usr">Strategy Name:</label>
-                <input type="text" class="form-control" id="usr" name="strategyname">
+              <div class="formItem">
+                <label class="desc" id="title1" for="Field1">Benchmark Name</label>
+                <div>
+                    <div>
+                        <select class="" tabindex="2" name="Benchmark" required="required">
+                            <option>Select Benchmark</option>
+                            <option value="BSE">BSE</option>
+                            <option value="NSE">NSE</option>
+                        </select>
+                    </div>                </div>
+              </div>
 
-                <label for="pwd">Parameters</label>
-                <select class="form-control" name="parameterkey">
-            <option value="" disabled selected></option>
-            <option value="Rows">
-              Rows
-            </option>
-            <option value="Columns">
-              columns
-            </option>
-  
-          </select>
-                <label for="pwd">Benchmark</label>
-                <select class="form-control" name="Benchmark">
-            <option value="" disabled selected></option>
-            <option value="BSE">
-              BSE
-            </option>
-            <option value="NSE">
-              NSE
-            </option>
-  
-          </select>
+ 
 
-            </div>
-            <button type="submit" name="viewdataframe">View Data</button>
-            <button type="submit" name="savestrategy">Save</button>
-            <button type="submit" name="createtreatment">Create Treatment</button>
+              <div class="formItem">
+                <label class="desc" id="title1" for="Field1">Comments</label>
+                <div>
+                    <textarea id="Field1" name="comments" type="text" class="field" value="" size="8" tabindex="11"></textarea>
+                </div>
+              </div>
+        
+ 
+              <div class="formItem">
+                <div>
+                    <button type="submit" name="savestrategy" class="bttn bttn_pri">Submit</button>
+                    <input type="button" class="bttn" value="Cancel">
+                </div>
+              </div>
 
         </form>
-    </div>
-    <br>
-    <div class="container" style="margin-left: 0px;">
 
-        {% autoescape off %} {{ table_content1 }} {% endautoescape %}
+    <!-- Content Ends -->
 
-    </div>
-    <div class="container" style="margin-left: 375px;">
-
-        <b>{{ return_message }}</b>
-
-    </div>
+    {% endblock %}   
 
 
-    <!-- <div class="container">
- <form method="post" action="filtered-data" enctype="multipart/form-data">{% csrf_token %}
-
-
-</form>
-</div>  -->
-
-
-
-
-
-
-
-</body>
-
-</html>

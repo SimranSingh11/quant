@@ -1,92 +1,94 @@
-<!DOCTYPE html>
-<html>
-    {% csrf_token %}
-<head>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-</head>
-<body>
+{% extends 'base_layout.html' %}
+{% load static %}
+{% block content %}
 
-  <div class="container">
-    <h3>Savart--Vantage-Quant</h3>
-  </div>
-  <br><br>
+      <div class="page">
 
-  <div class="container">
-    <a class="btn btn-info" href="">Home</a>
-    <a class="btn btn-primary" href="oldstrategy">View Data</a>
-    <a class="btn btn-success" href="fileupload">Import New</a>
-    <a class="btn btn-primary" href="createstrategy">My New-Strategy</a>
-    <a class="btn btn-primary" href="Viewstrategies">View all Strategy</a>
-    <a class="btn btn-primary" href="tca">TCA</a>
-    <a class="btn btn-primary" href="viewtca">My TCA Views</a>
+      <div class="page__title">
+        <img src="{% static '/img/tca.png' %}" class="page__title--pic">
+        <span class="page__title--subHead">Transaction Cost Analysis</span>
+        <span class="page__title--txt">Add New Transaction</span>
+      </div>
+
+        <!-- Content Begins -->
 
 
-</div>
-<!-- <p>Filtered HTML</p>
-<p>{{ years }}</p> -->
-<div class="container">
-    <p class="text-center">{{ tca_message }}</p>
-</div>
-<div class="container">
-        <form method="post" action="tca" enctype="multipart/form-data">{% csrf_token %}
-            <!-- <div class="form-group"> -->
-            <label for="formGroupExampleInput">Broker Name:</label>
-                <select class="form-control" name="brokername">
-                    <option value="" disabled selected></option>
-                    <option value="Money Control">
-                    Money Control
-                    </option>
-                    <option value="Zerodha">
-                    Zerodha
-                    </option>
-                </select>
-            <label for="coun">Select Country:</label>
-            <select class="form-control" name="countryname">
-                <option value="" disabled selected></option>
-                <option value="INDIA">
-                    India
-                </option>
-                <option value="USA">
-                    USA
-                </option>
-                <option value="CANADA">
-                    Canada
-                </option>
-            </select>
-            <label for="coun">Purchase Currency:</label>
-            <select class="form-control" name="purchasecurrency">
-                <option value="" disabled selected></option>
-                <option value="Rupees">
-                    Rupees
-                </option>
-                <option value="Dollars">
-                    Dollars
-                </option>
-            </select>
-            <label for="coun">Investee Currency:</label>
-            <select class="form-control" name="investeecurrency">
-                <option value="" disabled selected></option>
-                <option value="Rupee">
-                    Rupees
-                </option>
-                <option value="Dollar">
-                    Dollars
-                </option>
-            </select>
-            <label for="usr">Delivery brokerage:</label>
-            <input type="text" class="form-control" id="usr" name="deliverybrokage">
-
-            <label for="usr">LTCG Tax</label>
-            <input type="text" class="form-control" id="usr" name="ltcgtax">
-
-            <label for="usr">All other charges</label>
-            <input type="text" class="form-control" id="usr" name="othercharges">
+    <form method="post" class="rwd" action="tca" enctype="multipart/form-data">{% csrf_token %}
 
 
-            <label for="coun">Purchase Type</label>
+    <div class="formItem">
+        <label class="desc" id="title1" for="Field1">Broker Name</label>
+        <div>
+          <!-- <input id="Field1" name="Field1" type="text" class="field" value="" size="8" tabindex="1"> -->
+          <input type="text" tabindex="1" value="" autofocus name="brokername" list="brokers" />
+          <datalist id="brokers">
+            <option>Aarav</option>
+            <option>Abhilash</option>
+            <option>Agrata</option>
+            <option>Avish</option>
+            <option>Ayaan</option>
+            <option>Akshay</option>
+            <option>Alagan</option>
+            <option>Anand</option>
+            <option>Bhavya</option>
+            <option>Brinda</option>
+            <option>Chetan</option>
+          </datalist>
+        </div>
+      </div>
+
+
+      <div class="formItem">
+        <label class="desc" id="title1" for="Field1">Investee Country</label>
+        <div>
+          <input id="Field1"  type="text" class="field" value="" name="countryname" size="8" tabindex="1">
+        </div>
+      </div>
+
+
+      <div class="formItem">
+        <label class="desc" id="title1" for="Field1">Purchase Currency</label>
+        <div>
+          <input id="Field1"  type="text" class="field" value="" name="purchasecurrency" size="8" tabindex="2">
+        </div>
+      </div>
+
+
+      <div class="formItem">
+        <label class="desc" id="title1" for="Field1">Investment Currency</label>
+        <div>
+          <input id="Field1"  type="text" class="field" value="" name="investeecurrency" size="8" tabindex="3">
+        </div>
+      </div>
+
+
+      <div class="formItem">
+        <label class="desc" id="title1" for="Field1">Delivery Brokerage</label>
+        <div>
+          <input id="Field1"  type="text" class="field" value="" name="deliverybrokage" size="8" tabindex="4">
+        </div>
+      </div>
+
+
+      <div class="formItem">
+        <label class="desc" id="title1" for="Field1">LTCG Tax</label>
+        <div>
+          <input id="Field1"  type="text" class="field" value="" name="ltcgtax" size="8" tabindex="5">
+        </div>
+      </div>
+
+
+      <div class="formItem">
+        <label class="desc" id="title1" for="Field1">All Other Charges</label>
+        <div>
+          <input id="Field1"  type="text" class="field" value="" name="othercharges" size="8" tabindex="6">
+        </div>
+      </div>
+
+
+      <div class="formItem">
+        <label class="desc" id="title1" for="Field1">Purchase Type </label>
+        <div>
             <select class="form-control" name="purchasetype">
                 <option value="" disabled selected></option>
                 <option value="Full">
@@ -96,38 +98,58 @@
                     Specific
                 </option>
             </select>
+        </div>
+      </div>
 
 
-            <label for="usr"> Purchase Rate</label>
-            <input type="text" class="form-control" id="usr" name="purchaserate">
-
-            <label for="usr"> Quantity</label>
-            <input type="text" class="form-control" id="usr" name="quantity">
-
-            <label for="usr">Comments</label>
-            <input type="text" class="form-control" id="usr" name="comments">
-
-            <br/>
-            <button type="submit">Save</button>
-
-            
-            <!-- </div> -->
-        </form>
-
-</div>
+      <div class="formItem">
+        <label class="desc" id="title1" for="Field1">Purchase Rate</label>
+        <div>
+          <input id="Field1"  type="text" class="field" value="" name="purchaserate" size="8" tabindex="8">
+        </div>
+      </div>
 
 
+      <div class="formItem">
+        <label class="desc" id="title1" for="Field1">Quantity</label>
+        <div>
+          <input id="Field1"  type="text" class="field" value="" name="quantity" size="8" tabindex="9">
+        </div>
+      </div>
 
 
+      <div class="formItem">
+        <label class="desc" id="title1" for="Field1">Purchase Date</label>
+        <div>
+          <input id="Field1"  type="text" class="field" value="" name="purchase_date" size="8" tabindex="10">
+        </div>
+      </div>
 
-<!-- <div class="container">
- <form method="post" action="filtered-data" enctype="multipart/form-data">{% csrf_token %}
+
+      <div class="formItem">
+        <label class="desc" id="title1" for="Field1">Comments</label>
+        <div>
+          <textarea id="Field1"  type="text" class="field" value="" name="comments" size="8" tabindex="11"></textarea>
+        </div>
+      </div>
+
+
+      <div class="formItem">
+        <div>
+            <input type="submit" class="bttn bttn_pri" value="Submit">
+            <input type="button" class="bttn" value="Cancel">
+        </div>
+      </div>
 
 
 </form>
-</div>  -->
 
 
-</body>
-</html>
+    <!-- Content Ends -->
+
+    {% endblock %}  
+
+
+
+
 

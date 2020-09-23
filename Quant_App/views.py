@@ -86,10 +86,11 @@ def fileupload(request):
         message = ''
         final_df = BusinessLogicClass.import_files_intoDF()
         ## This below path is used to delete the files from Document folders...
-        empty_dir = r"/home/simran/Desktop/Django/Vantage_Quant/Quant_App/documents"
+        # empty_dir = r"/home/simran/Desktop/Django/Vantage_Quant/Quant_App/documents"
+        empty_dir = r"/home/simran/Desktop/Vantage_quant_copy/Quant_App/documents"
         shutil.rmtree(empty_dir)
         ## Actually its deleted the folder it self... so we are creating Folder again...
-        os.mkdir("/home/simran/Desktop/Django/Vantage_Quant/Quant_App/documents")
+        os.mkdir("/home/simran/Desktop/Vantage_quant_copy/Quant_App/documents")
         if type(final_df) != str:
             final_df.columns=final_df.columns.str.replace('.','_')  ## If Columsn has (.) in name
             x = datetime.datetime.now()
@@ -257,8 +258,11 @@ def create_strategy(request):
         strategyname = request.POST["strategyname"]
         parameterkey = request.POST["parameterkey"]
         Benchmark = request.POST["Benchmark"]
+        comments = request.POST["comments"]
+        print("----------------->",paramdata,newstrategy,strategyname,parameterkey,Benchmark,comments )
         
-        return_message = DatalayersClass.insert_creatstrategy(paramdata,newstrategy,strategyname,parameterkey,Benchmark)
+
+        return_message = DatalayersClass.insert_creatstrategy(paramdata,newstrategy,strategyname,parameterkey,Benchmark,comments)
         #print('This is Return Message',return_message)
         if type(return_message) == list:
             message = "There is Strategy already created on this " + paramdata
@@ -296,9 +300,10 @@ def get_file_metadata(request):
 def treatment(request):
     paramid = request.GET["parameter_id"]
     stratergy_name = request.GET["stratergy_name"]
+    strat_id = request.GET["strat_id"]
     param_list = DatalayersClass.get_param_by_paramid(paramid)
     
-    return render(request,'treatment.html',{'paramets':param_list, 'strategyname': stratergy_name})
+    return render(request,'treatment.html',{'paramets':param_list, 'strategyname': stratergy_name, 'strat_id': strat_id})
 
 
 
@@ -312,58 +317,21 @@ def create_treatment(request):
     math_operators = request.POST.get("math_operators")
     industry = request.POST.get("industry")
     treatment_name = request.POST.get("treatment_name")
-
+    strat_id = request.POST['strat_id']
     return_message = DatalayersClass.insert_creattreatment(treatment_by, correlation, math_operators, industry, strategyname, treatment_name, wieghtage, param_name)    
 
     print("------------>", return_message)
+
+    from django.urls import reverse
+    from urllib.parse import urlencode
+    base_url = reverse('ViewSingleStratergy')  # 1 /products/
+    query_string =  urlencode({'stratergy_id': strat_id})  # 2 category=42
+    url = '{}?{}'.format(base_url, query_string)  # 3 /products/?category=42
     if return_message == True:
-        return redirect('view_treatment')   
+        return redirect(url) 
     else:
-        return redirect('Viewstrategies')
+        return redirect(url)
 
-# def create_treatment(request):
-#     # str_list_strat = DatalayersClass.getStrategies()
-#     # str_list_treat = DatalayersClass.getTreatments()
-
-
-#     if request.method == 'POST' :
-#         wieghtage = request.POST.getlist("wieghtage")
-#         param_name = request.POST.getlist("param_name")
-#         treatment_by = request.POST.get("treatment_by")
-#         correlation = request.POST.get("correlation")
-#         strategyname = request.POST .get("strategyname")
-#         math_operators = request.POST.get("math_operators")
-#         industry = request.POST.get("industry")
-#         treatment_name = request.POST.get("treatment_name")
-        
-#         # dataframe according to stratergy name 
-#         strat_df = DatalayersClass.get_dataframes_by_stratergyname(strategyname)
-#         wieghtage = [int(i) for i in wieghtage] 
-#         treatment_df = strat_df * wieghtage
-
-#         print("COmputation started")
-#         # calling computation function
-#         my_dfs,Sorted_dfs,reductions_Dfs = automate_Raking(treatment_df)
-#         all_dfs = check_consequtive_fall_dfs(Sorted_dfs)
-#         Summary = get_summary(all_dfs)
-#         Trans = transpose_rowindex(Summary)
-#         Df9 = get_bestparametes_Combinations_unique(Trans)
-#         # plots_df = get_lineplots(Df9)
-#         # data = plots_df.to_html()        
-#         # return render(request,'computation.html',{'Trans' : data }) 
-
-#         return_message = DatalayersClass.insert_creattreatment(treatment_by, correlation, math_operators, industry, strategyname, treatment_name, wieghtage, param_name)
-
-
-#         # return_message = DatalayersClass.insert_creattreatment(treatment_by, correlation, math_operators, industry, strategyname, treatment_name, wieghtage, param_name, Trans, Df9, my_dfs, treatment_df)
-
-
-#         if return_message == True:
-#             return redirect('view_treatment')   
-#         else:
-#             return redirect('Viewstrategies')
-#     else:
-#         return redirect('Viewstrategies')
 
 
 
@@ -387,7 +355,7 @@ def update_treatment_detail(request):
     print("------------->", wieghtage, param_id, treatment_by, correlation, math_operators, industry, treatment_name)
 
     DatalayersClass.update_treatment_details(wieghtage, param_id, treatment_by, correlation, math_operators, industry, treatment_name, treat_id)
-    return redirect('view_treatment')
+    return redirect('view_treatment')  
 
 
 def getall_startegies(request):
@@ -395,6 +363,24 @@ def getall_startegies(request):
     Str_list = DatalayersClass.getStrategies()
 
     return render(request,'Viewstratgies.html',{'Strat_list':Str_list})
+
+def get_single_stratergy(request):
+    strat_id = request.GET["stratergy_id"]
+    get_list = DatalayersClass.stratergy_by_id(strat_id)
+    stratergy_name = get_list['StrategyName']
+    get_treat_by_stratergy = DatalayersClass.get_treatment_By_stratergy(stratergy_name)
+    count_treat = get_treat_by_stratergy.count()
+    return render(request,'single_stratergy.html',{'get_list' : get_list, 'treatment_list':get_treat_by_stratergy, "count_treat": count_treat})
+
+
+def stratergy_treatment_view(request):
+    treat_id = request.GET["treat_id"]
+    get_treat_data = DatalayersClass.treatment_by_id(treat_id)
+    strat_name = get_treat_data['strat_name']
+    get_strat_data = DatalayersClass.get_benchmark_by_strat(strat_name)
+    get_treat_param = DatalayersClass.treatment_param_by_id(treat_id)
+    return render(request,'treatment_view.html',{'treat_list': get_treat_data, 'strat_data': get_strat_data, 'param_list': get_treat_param})
+
 
 def getall_treatments(request):
     
@@ -438,10 +424,9 @@ def view_tca(request):
 def tca_views(request,id):
     # tca_id = get_object_or_404(TCA)
     
-
     print(id.split("|"))
     get_list = DatalayersClass.tca_by_id(id.split("|")[0])
-    print(get_list)
+    print(get_list) 
 
     if id.split("|")[1] == 'View':
         

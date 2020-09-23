@@ -1,3 +1,128 @@
+{% extends 'base_layout.html' %}
+{% load static %}
+{% block content %}
+
+<div class="page">
+
+        <!-- Update Page Title -->
+        <div class="page__title">
+          <img src="{% static '/img/tca.png' %}" class="page__title--pic">
+          <span class="page__title--subHead">Strategy - {{ get_list.strat_name }}</span>
+          <span class="page__title--txt">Edit Treatment</span>
+        </div>
+
+        <!-- Content Begins -->
+
+
+
+        <div class="topInfo">
+            <div class="topInfo__item">
+              <div class="topInfo__item--sub">Strategy</div>
+              <div class="topInfo__item--txt">{{ get_list.strat_name }}</div>
+            </div>
+          
+          
+            <!-- <div class="topInfo__item">
+              <div class="topInfo__item--sub">Benchmark</div>
+              <div class="topInfo__item--txt">NSE</div>
+            </div> -->
+        </div>
+
+
+        <form method="post" action="update_treatment_detail" enctype="multipart/form-data">{% csrf_token %}
+          {{ get_list }}
+          {% load quantapp_extras %}
+          <input type="hidden" name="treat_id" value="{{ get_list|mongo_id }}">    
+        <div class="topInfo" style="padding:20px 0 0 0">
+          <div class="topInfo__item">
+            <div class="topInfo__item--sub">Treatment </div>
+            <div class="topInfo__item--txt">
+              <select class="topInfo__item--select" tabindex="9"  name="treatment_by" required="required">
+                <option>Select </option>
+                <option value="Client" {% if get_list.treatment_by == 'Client' %}selected="selected"{% endif %}>Client</option>
+                <option value="User" {% if get_list.treatment_by == 'User' %}selected="selected"{% endif %}>User</option>
+            </select>              
+            </div>          </div>
+        
+        
+          <div class="topInfo__item">
+            <div class="topInfo__item--sub">Correlation</div>
+            <div class="topInfo__item--txt">
+              <select class="topInfo__item--select" tabindex="9" name="correlation" required="required">
+                <option value="Positive" {% if get_list.correlation == 'Positive' %}selected="selected"{% endif %}>Positive</option>
+                <option value="Negative" {% if get_list.correlation == 'Negative' %}selected="selected"{% endif %}>Negative</option>
+            </select>              
+            </div>
+          </div>
+        
+        
+          <div class="topInfo__item">
+            <div class="topInfo__item--sub">Math</div>
+            <div class="topInfo__item--txt">
+              <select class="topInfo__item--select" tabindex="9" name="math_operators" required="required">
+                <option value="Plus" {% if get_list.math_operators == 'Negative' %}selected="selected"{% endif %}>Plus</option>
+                <option value="Minus" {% if get_list.math_operators == 'Minus' %}selected="selected"{% endif %}>Minus</option>
+                <option value="Division" {% if get_list.math_operators == 'Division' %}selected="selected"{% endif %}>Division</option>
+                <option value="Multiplication" {% if get_list.math_operators == 'Multiplication' %}selected="selected"{% endif %}>Multiplication</option>
+            </select>              
+            </div>          </div>
+        
+        
+          <div class="topInfo__item">
+            <div class="topInfo__item--sub">Industry</div>
+            <div class="topInfo__item--txt">
+              <select class="topInfo__item--select" tabindex="9" name="industry" required="required">
+                <option value="Manufacturing" {% if get_list.industry == 'Manufacturing' %}selected="selected"{% endif %}>Manufacturing</option>
+                <option value="Information Technology" {% if get_list.industry == 'Information Technology' %}selected="selected"{% endif %}>Information Technology</option>
+                <option value="Transport" {% if get_list.industry == 'Transport' %}selected="selected"{% endif %}>Transport</option>
+                <option value="Telecommunication" {% if get_list.industry == 'Telecommunication' %}selected="selected"{% endif %}>Telecommunication</option>
+                <option value="Agriculture" {% if get_list.industry == 'Agriculture' %}selected="selected"{% endif %}>Agriculture</option>
+                <option value="Construction" {% if get_list.industry == 'Construction' %}selected="selected"{% endif %}>Construction</option>
+                <option value="Education" {% if get_list.industry == 'Education' %}selected="selected"{% endif %}>Education</option>
+            </select>              
+            </div>          </div>
+        </div>
+
+
+        <table class="content-table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Parameter</th>
+              <th>Weightage</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for param in get_params_list %}
+            <tr>
+              <td><input type="checkbox"></td>
+              <td>{{ param.param_name }}</td>
+              <td>
+              {% load quantapp_extras %}
+              <input type="hidden" value="{{ param|mongo_id }}" name="param_id">
+              <input type="number" class="smallTxtBox" maxlength="3" size="5" name="wieghtage" id="wieghtage" value="{{ param.wieghtage }}">
+            </td>
+            </tr>
+          {% endfor %}
+
+          </tbody>
+        </table>        
+        <div>
+          <input type="submit" class="bttn bttn_pri" value="Submit">
+          <input type="button" class="bttn" value="Cancel">
+      </div>
+    </form>
+<br><br>
+
+
+
+
+
+    <!-- Content Ends -->
+
+    {% endblock %}  
+
+
 <!DOCTYPE html>
 <html lang="en">
 

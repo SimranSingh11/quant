@@ -1,110 +1,59 @@
-<!DOCTYPE html>
-<html>
-    {% csrf_token %}
-<head>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-</head>
-<body>
+{% extends 'base_layout.html' %}
+{% load static %}
+{% block content %}
+      <div class="page">
 
-  <div class="container">
-    <h3>Savart--Vantage-Quant</h3>
-  </div>
-  <br><br>
+        <!-- Update Page Title -->
+        <div class="page__title">
+          <img src="{% static '/img/tca.png' %}" class="page__title--pic">
+          <span class="page__title--subHead">Vantage Quant</span>
+          <span class="page__title--txt">Transaction Cost Analysis</span>
+        </div>
 
-  <div class="container">
-    <a class="btn btn-info" href="">Home</a>
-    <a class="btn btn-primary" href="oldstrategy">View Data</a>
-    <a class="btn btn-success" href="fileupload">Import New</a>
-    <a class="btn btn-primary" href="createstrategy">My New-Strategy</a>
-    <a class="btn btn-primary" href="Viewstrategies">View all Strategy</a>
-    <a class="btn btn-primary" href="tca">TCA</a>
-    <a class="btn btn-primary" href="viewtca">My TCA Views</a>
+        <!-- Content Begins -->
+        <div class="bttn bttn_pri" style="display:inline-block;"><a href="tca">Create New TCA</a></div>
 
-</div>
-<!-- <p>Filtered HTML</p>
-<p>{{ years }}</p> -->
-<div class="container">
-    <p class="text-center"></p>
-</div>
-<div class="container">
-
-
-        <!-- <form method="post" action="viewtca" enctype="multipart/form-data">{% csrf_token %}
-            <select class="form-control" name="view_tca">
-                <option value="" disabled selected></option>
-                {% for param in params %}
-          
-                <option value="{{ param }}">
-                  {{param}}
-                </option>
-                {% endfor %}
-      
-              </select>
-              <br>
-      
-              <button type="submit">View Data</button>
-      
-            
-        </form> -->
-
-
-           
-        <table class="table table-dark table-hover">
-          <thead>
-            <tr>
-           
-              <th>TCA ID</th>
-              <th>Broker Name </th>
-              <th>Country Name</th>
-              <th>Purchase Currency</th>
-       
-              <!-- <th>Weightage</th> -->
-            </tr>
+        <table id="table_id" width="100%" class="display table table-bordered table-hover dt-responsive">
+          <thead style="background-color:rgb(16, 62, 131); color:#fff;">
+              <tr>
+                  <th>Purchase Date</th>
+                  <th>Broker Name</th>
+                  <th>Purchase Type</th>
+                  <th>Quantity</th>
+                  <th>Investee Country</th>
+                  <th>Purchase Currency</th>
+                  <th>Investment Currency</th>
+                  <th>Purchase Rate</th>
+                  <th>Delivery Brokerage</th>
+                  <th>LTCG Tax</th>
+                  <th>All other Charges</th>
+              </tr>
           </thead>
           <tbody>
-              {% for tca in TCA_list %} 
+            {% for tca in TCA_list %}
             <tr>
-              
-              <td>{{ tca.TCA_ID }}</td>
+              <td><a href="tcaView.htm">{{ tca.Purchase_Date }}</a></td>
               <td>{{ tca.Broker_Name }}</td>
+              <td>{{ tca.Purchasetype }}</td>
+              <td>{{ tca.Quantity }}</td>
               <td>{{ tca.Country_Name }}</td>
               <td>{{ tca.Purchase_Currency }}</td>
-              <td><a href="/view{{ tca.TCA_ID }}|View">View</a></td>
-              <td><a href="/view{{ tca.TCA_ID }}|Edit">Edit</a></td>
-              
+              <td>{{ tca.Investee_Currency }}</td>
+              <td>USD {{ tca.purchaserate }}</td>
+              <td>USD {{ tca.Delivery_Brokage }}</td>
+              <td>{{ tca.Ltcg_Tax }}</td>
+              <td>{{ tca.Other_Charges }}</td>
             </tr>
-            {% endfor %}
-      
+            {% endfor %} 
+           
           </tbody>
-        </table>
-    
-       
+      </table>
 
-</div>
 
-<div class="container">
-    <p class="text-center">{{ list_tca_data }}</p>
-</div>
-
-<div class="container">
-    <p class="text-center">{{ table_content1 }}</p>
-</div>
+    <!-- Content Ends -->
+    {% endblock %}  
 
 
 
 
-
-<!-- <div class="container">
- <form method="post" action="filtered-data" enctype="multipart/form-data">{% csrf_token %}
-
-
-</form>
-</div>  -->
-
-
-</body>
-</html>
 

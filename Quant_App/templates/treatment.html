@@ -1,163 +1,307 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <title>Savart-Vantage Quant</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
-    <!-- Css and js -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.5/css/responsive.bootstrap4.min.css">
+{% extends 'base_layout.html' %}
+{% load static %}
+{% block content %}
 
 
-    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
-    <script src="https://cdn.datatables.net/responsive/2.2.5/js/dataTables.responsive.min.js"></script>
-    <script src="https://cdn.datatables.net/responsive/2.2.5/js/responsive.bootstrap4.min.js"></script>
-</head>
+      <div class="page">
 
-<body>
-    <br>
-    <div class="container">
-        <a class="btn btn-info" href="">Home</a>
-        <a class="btn btn-primary" href="oldstrategy">View Data</a>
-        <a class="btn btn-success" href="fileupload">Import New</a>
-        <a class="btn btn-primary" href="createstrategy">My New-Strategy</a>
-        <a class="btn btn-primary" href="Viewstrategies">View all Strategy</a>
-        <a class="btn btn-primary" href="tca">TCA</a>
-        <a class="btn btn-primary" href="viewtca">My TCA Views</a>
-        <a class="btn btn-primary" href="view_treatment">View all Treatement</a>
-        <a class="btn btn-primary" href="param_mapping">Param Mapping</a>
+        <!-- Update Page Title -->
+        <div class="page__title">
+          <img src="{% static '/img/tca.png' %}" class="page__title--pic">
+          <span class="page__title--subHead">Strategy Manager</span>
+          <span class="page__title--txt">Add New Treatment</span>
+        </div>
+
+        <!-- Content Begins -->
 
 
 
-    </div>
-    <br>
-    <!-- Stratergy name -->
-    <section class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1>{{ strategyname }}</h1>
+        <div class="topInfo">
+            <div class="topInfo__item">
+              <div class="topInfo__item--sub">Strategy</div>
+              <div class="topInfo__item--txt">{{ strategyname }}</div>
+            </div>
+          
+          
+            <!-- <div class="topInfo__item">
+              <div class="topInfo__item--sub">Benchmark</div>
+              <div class="topInfo__item--txt">NSE</div>
+            </div> -->
+        </div>
+
+        <form method="post" action="create_treatment" enctype="multipart/form-data">{% csrf_token %}
+          <input type="hidden" value="{{ strategyname }}" name="strategyname">
+          <input type="hidden" value="{{ strat_id }}" name="strat_id">
+        <div class="topInfo" style="padding:20px 0 0 0">
+
+          <div class="topInfo__item">
+            <div class="topInfo__item--sub">Treatment Name </div>
+            <div class="topInfo__item--txt">
+              <input type="textbox" class="searchBox__txt" name ="treatment_name" placeholder="Enter Treatment Name">
+            </div>          
+          </div>
+
+
+          <div class="topInfo__item">
+            <div class="topInfo__item--sub">Treatment </div>
+            <div class="topInfo__item--txt">
+              <select class="topInfo__item--select" tabindex="9" name="treatment_by" required="required">
+                    <option value="Client">Client</option>
+                    <option value="User">User</option>
+            </select>              
+            </div>          </div>
+        
+        
+          <div class="topInfo__item">
+            <div class="topInfo__item--sub">Correlation</div>
+            <div class="topInfo__item--txt">
+              <select class="topInfo__item--select" tabindex="9" required="required">
+                <option value="Positive">Positive</option>
+                <option value="Negative">Negative</option>
+            </select>              
+            </div>
+          </div>
+        
+        
+          <div class="topInfo__item">
+            <div class="topInfo__item--sub">Math</div>
+            <div class="topInfo__item--txt">
+              <select class="topInfo__item--select" tabindex="9" required="required" name="math_operators">
+                <option value="Plus">Plus</option>
+                <option value="Minus">Minus</option>
+                <option value="Division">Division</option>
+                <option value="Multiplication">Multiplication</option>
+            </select>              
+            </div>    
+          </div>
+        
+        
+          <div class="topInfo__item">
+            <div class="topInfo__item--sub">Industry</div>
+            <div class="topInfo__item--txt">
+              <select class="topInfo__item--select" tabindex="9" required="required" name="industry">
+                <option value="Manufacturing">Manufacturing</option>
+                <option value="Information Technology">Information Technology</option>
+                <option value="Transport">Transport</option>
+                <option value="Telecommunication">Telecommunication</option>
+                <option value="Agriculture">Agriculture</option>
+                <option value="Construction">Construction</option>
+                <option value="Education">Education</option>
+            </select>              
+            </div>          </div>
+        </div>
+
+
+        <table class="content-table" id="example">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Parameter</th>
+              <th>Weightage</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for param in paramets %}
+            <tr>
+              <td><input type="checkbox"></td>
+              <td>{{param}}</td>
+              <td>
+                <input type="hidden" value="{{ param }}" name="param_name">
+                <input type="number" class="smallTxtBox" name="wieghtage" id="wieghtage" maxlength="3" size="5">
+              </td>
+            </tr>
+            {% endfor %}
+
+
+          </tbody>
+        </table>        
+
+        <div>
+          <input type="submit" class="bttn bttn_pri" value="Submit">
+          <input type="button" class="bttn" value="Cancel">
+      </div>
+      </form>
+<br><br>
+<script>
+  $(document).ready(function() {
+      $('#example').DataTable();
+  });
+</script>
+
+{% endblock %}  
+
+
+
+
+    <!-- Content Ends -->
+
+
+    <!DOCTYPE html>
+    <html lang="en">
+    
+    <head>
+        <title>Savart-Vantage Quant</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+        <!-- Css and js -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.5/css/responsive.bootstrap4.min.css">
+    
+    
+        <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+        <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+        <script src="https://cdn.datatables.net/responsive/2.2.5/js/dataTables.responsive.min.js"></script>
+        <script src="https://cdn.datatables.net/responsive/2.2.5/js/responsive.bootstrap4.min.js"></script>
+    </head>
+    
+    <body>
+        <br>
+        <div class="container">
+            <a class="btn btn-info" href="">Home</a>
+            <a class="btn btn-primary" href="oldstrategy">View Data</a>
+            <a class="btn btn-success" href="fileupload">Import New</a>
+            <a class="btn btn-primary" href="createstrategy">My New-Strategy</a>
+            <a class="btn btn-primary" href="Viewstrategies">View all Strategy</a>
+            <a class="btn btn-primary" href="tca">TCA</a>
+            <a class="btn btn-primary" href="viewtca">My TCA Views</a>
+            <a class="btn btn-primary" href="view_treatment">View all Treatement</a>
+            <a class="btn btn-primary" href="param_mapping">Param Mapping</a>
+    
+    
+    
+        </div>
+        <br>
+        <!-- Stratergy name -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>{{ strategyname }}</h1>
+                    </div>
                 </div>
             </div>
-        </div>
-        <!-- /.container-fluid -->
-    </section>
-    <div class="content-wrapper">
-        <section class="content">
-            <form method="post" action="create_treatment" enctype="multipart/form-data">{% csrf_token %}
-                <input type="hidden" value="{{ strategyname }}" name="strategyname">
-                <div class="container-fluid">
-                    <!-- SELECT2 EXAMPLE -->
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label>Treatment By</label>
-                                <select class="form-control select2" style="width: 50%;" name="treatment_by">
-                                <option value="Client">Client</option>
-                                <option value="User">User</option>
-        
-                            </select>
-                            </div>
-                            <!-- /.form-group -->
-                            <div class="form-group">
-                                <label>Correlation</label>
-                                <select class="form-control select2" style="width: 50%;" name="correlation">
-                                <option value="Alaska">Alaska</option>
-                                <option value="California">California</option>
-                                <option value="Delaware">Delaware</option>
-                            </select>
-                            </div>
-                            <div class="form-group">
-                                <label>Treatment Name</label>
-                                <input class="form-control" type="text" style="width: 50%;" name="treatment_name">
-                            </div>
-                            <!-- /.form-group -->
-                        </div>
-                        <!-- /.col -->
-                        <div class="col-sm-6">
-                            <!-- /.form-group -->
-                            <div class="form-group">
-                                <label>Math Operators</label>
-                                <select class="form-control select2" style="width: 50%;" name="math_operators">
-                                <option value="Plus">Plus</option>
-                                <option value="Minus">Minus</option>
-                                <option value="Division">Division</option>
-                                <option value="Multiplication">Multiplication</option>
-                            
-                            </select>
-                            </div>
-                            <div class="form-group">
-                                <label>Industry</label>
-                                <select class="form-control select2" style="width: 50%;" name="industry">
-                                <option value="Manufacturing">Manufacturing</option>
-                                <option value="Information Technology">Information Technology</option>
-                                <option value="Transport">Transport</option>
-                                <option value="Telecommunication">Telecommunication</option>
-                                <option value="Agriculture">Agriculture</option>
-                                <option value="Construction">Construction</option>
-                                <option value="Education">Education</option>
-                            </select>
-                            </div>
-                            <!-- /.form-group -->
-                        </div>
-                        <!-- /.col -->
-                    </div>
-                    <!-- /.card -->
-
-                    <div class="card-body">
-                        <table id="example" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
-                            <thead>
-                                <tr>
-                                    <th>Parameters</th>
-                                    <th>Weightage</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for param in paramets %}
-                                <tr>
-
-                                    <td>{{param}}</td>
-
-                                    <td>
-                                        <input type="hidden" value="{{ param }}" name="param_name">
-                                        <input type="number" name="wieghtage" id="wieghtage">
-
-                                    </td>
-                                </tr>
-                                {% endfor %}
-
-                            </tbody>
-                        </table>
-
-                        <button type="submit">Create Treatment</button>
-                    </div>
-
-
-                </div>
-                <!-- /.container-fluid -->
-            </form>
+            <!-- /.container-fluid -->
         </section>
-    </div>
+        <div class="content-wrapper">
+            <section class="content">
+                <form method="post" action="create_treatment" enctype="multipart/form-data">{% csrf_token %}
+                    <input type="hidden" value="{{ strategyname }}" name="strategyname">
+                    <div class="container-fluid">
+                        <!-- SELECT2 EXAMPLE -->
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Treatment By</label>
+                                    <select class="form-control select2" style="width: 50%;" name="treatment_by">
+                                    <option value="Client">Client</option>
+                                    <option value="User">User</option>
+            
+                                </select>
+                                </div>
+                                <!-- /.form-group -->
+                                <div class="form-group">
+                                    <label>Correlation</label>
+                                    <select class="form-control select2" style="width: 50%;" name="correlation">
+                                    <option value="Alaska">Alaska</option>
+                                    <option value="California">California</option>
+                                    <option value="Delaware">Delaware</option>
+                                </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Treatment Name</label>
+                                    <input class="form-control" type="text" style="width: 50%;" name="treatment_name">
+                                </div>
+                                <!-- /.form-group -->
+                            </div>
+                            <!-- /.col -->
+                            <div class="col-sm-6">
+                                <!-- /.form-group -->
+                                <div class="form-group">
+                                    <label>Math Operators</label>
+                                    <select class="form-control select2" style="width: 50%;" name="math_operators">
+                                    <option value="Plus">Plus</option>
+                                    <option value="Minus">Minus</option>
+                                    <option value="Division">Division</option>
+                                    <option value="Multiplication">Multiplication</option>
+                                
+                                </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Industry</label>
+                                    <select class="form-control select2" style="width: 50%;" name="industry">
+                                    <option value="Manufacturing">Manufacturing</option>
+                                    <option value="Information Technology">Information Technology</option>
+                                    <option value="Transport">Transport</option>
+                                    <option value="Telecommunication">Telecommunication</option>
+                                    <option value="Agriculture">Agriculture</option>
+                                    <option value="Construction">Construction</option>
+                                    <option value="Education">Education</option>
+                                </select>
+                                </div>
+                                <!-- /.form-group -->
+                            </div>
+                            <!-- /.col -->
+                        </div>
+                        <!-- /.card -->
+    
+                        <div class="card-body">
+                            <table id="example" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>Parameters</th>
+                                        <th>Weightage</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for param in paramets %}
+                                    <tr>
+    
+                                        <td>{{param}}</td>
+    
+                                        <td>
+                                            <input type="hidden" value="{{ param }}" name="param_name">
+                                            <input type="number" name="wieghtage" id="wieghtage">
+    
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+    
+                                </tbody>
+                            </table>
+    
+                            <button type="submit">Create Treatment</button>
+                        </div>
+    
+    
+                    </div>
+                    <!-- /.container-fluid -->
+                </form>
+            </section>
+        </div>
+    
+    
+    
+    
+    
+        <script>
+            $(document).ready(function() {
+                $('#example').DataTable();
+            });
+        </script>
+    
+    
+    </body>
+    
+    </html>
 
 
 
 
 
-    <script>
-        $(document).ready(function() {
-            $('#example').DataTable();
-        });
-    </script>
 
-
-</body>
-
-</html>

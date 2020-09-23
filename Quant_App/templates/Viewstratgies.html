@@ -11,7 +11,7 @@
 
       <div class="topInfo">
       <div class="search"><input type="textbox" class="searchBox__txt" placeholder="Search Strategies"></div>
-      <div class="bttn bttn_pri"><a href="strategyNew.htm">Create New Strategy</a></div>
+      <div class="bttn bttn_pri"><a href="createstrategy">Create New Strategy</a></div>
       </div>
 
 
@@ -35,7 +35,8 @@
               <div class="card__user--time"> 3 months ago</div>
             </div>
         </div>
-        <a href="strategyDetail.htm" class="card__link">View</a>
+        {% load quantapp_extras %}
+        <a href="ViewSingleStratergy?stratergy_id={{ stat|mongo_id }}" class="card__link">View</a>
 
     </div>
     </div> <!-- card ends -->
@@ -50,38 +51,6 @@
 
 
 
-
-
-
-
-
-<!-- RWD Menu Begins -->
-
-<input type="checkbox" class="menu" id="op"></input>
-<div class="lower">
-<label for="op"></label>
-</div>
-
-<div class="overlay overlay-hugeinc">
-<label for="op"><img src="img/close.png"></label>
-<div class="rwdMenu">
-  <a href="strategy.htm">Strategy Manager</a>
-  <a href="dataZen.htm">DataZen</a>
-  <a href="tca.htm">Transaction Cost Analysis</a>
-  <a href="engine.htm">Engine</a>
-  <a href="output.htm">Output</a>
-  <a href="visual.htm">Visualization</a>
-  <a href="settings.htm">Settings</a>
-  <a href="signout.htm">Sign-out</a>
-</div>
-</div>
-  
-<!-- RWD Menu Ends -->
-
-
-<!-- Notification -->
-
-<div id="noti">Notification Text</div>
 
 
 

@@ -1,0 +1,88 @@
+{% extends 'base_layout.html' %}
+{% load static %}
+
+{% block content %}
+
+      <div class="page">
+
+        <!-- Update Page Title -->
+        <div class="page__title">
+          <img src="{% static '/img/tca.png' %}" class="page__title--pic">
+          <span class="page__title--subHead">Strategy - Emerging Blue Chip Mid-Caps</span>
+          <span class="page__title--txt">Treatment Details</span>
+        </div>
+
+        <!-- Content Begins -->
+        
+        <div class="topInfo">
+            <div class="topInfo__item">
+              <div class="topInfo__item--sub">Strategy</div>
+              <div class="topInfo__item--txt">{{ treat_list.strat_name }}</div>
+            </div>
+          
+            <div class="topInfo__item">
+              <div class="topInfo__item--sub">Benchmark</div>
+              <div class="topInfo__item--txt">{{ strat_data.Benchmark }}</div>
+            </div>
+        </div>
+
+
+        <div class="topInfo">
+
+            <div class="topInfo__item">
+                <div class="topInfo__item--sub">Treatment By<br>
+                    <div class="topInfo__item--txt">{{ treat_list.treatment_by }}</div>
+                </div>
+            </div>
+
+            <div class="topInfo__item">
+                <div class="topInfo__item--sub">Correlation<br>
+                    <div class="topInfo__item--txt">{{ treat_list.correlation }}</div>
+                </div>
+            </div>
+        
+            <div class="topInfo__item">
+                <div class="topInfo__item--sub">Math Operators<br>
+                    <div class="topInfo__item--txt">{{ treat_list.math_operators }}</div>
+                </div>
+            </div>
+        
+            <div class="topInfo__item">
+                <div class="topInfo__item--sub">Industry<br>
+                    <div class="topInfo__item--txt">{{ treat_list.industry }}</div>
+                </div>
+            </div>
+
+        </div>
+
+
+        <table class="content-table">
+            <tbody><tr>
+                <th></th>
+                <th>Parameter</th>
+                <th>Weightage</th>
+            </tr>
+            {% for param in param_list %}
+            
+            <tr>
+              <td></td>
+              <td><label for="checkbox-{{loop.index}}">{{ param.param_name }}</label></td>
+              <td>{{ param.wieghtage }} %</td>
+            </tr>
+            {% endfor %}
+              
+            </tbody></table>
+
+            {% load quantapp_extras %}
+            <div class="bttn bttn_pri" style="width:240px;"><a href="update_treatment?treat_id={{ treat_list|mongo_id }}">Edit Treatment</a></div>
+
+
+
+
+
+
+    <!-- Content Ends -->
+
+    {% endblock %}  
+
+  

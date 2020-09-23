@@ -1,0 +1,85 @@
+{% extends 'base_layout.html' %}
+{% load static %}
+
+{% block content %}
+<div class="page">
+      <div class="page__title">
+        <img src="{% static '/img/strategy.png' %}" class="page__title--pic">
+        <span class="page__title--subHead">Strategy Detail</span>
+        <span class="page__title--txt">{{ get_list.StrategyName }}</span>
+      </div>
+
+    <div class="topInfo">
+  <div class="topInfo__item">
+    <div class="topInfo__item--sub">Benchmark</div>
+    <div class="topInfo__item--txt">{{ get_list.Benchmark }}</div>
+  </div>
+
+
+  <div class="topInfo__item">
+    <div class="topInfo__item--sub">Treatments</div>
+    <div class="topInfo__item--txt">{{ count_treat }}</div>
+  </div>
+
+ 
+  <div class="topInfo__bttn bttn bttn_pri"><a href="strategyEdit.htm">Edit Strategy</a></div>
+  <div class="topInfo__bttn bttn bttn_pri">Delete Strategy</div>
+
+
+    </div>
+
+<!-- 
+<div class="page__title2">Treatments</div>
+<div class="searchBox">
+  <input type="textbox" class="searchBox__txt" placeholder="Search Treatments">
+</div> -->
+  <div class="topInfo padding20" >
+  {% load quantapp_extras %}  
+  <div class="search"><input type="textbox" class="searchBox__txt" placeholder="Search Treatments"></div>
+  <div class="bttn bttn_pri"><a href="treatment?parameter_id={{get_list.ParamID}}&stratergy_name={{get_list.StrategyName}}&strat_id={{ get_list|mongo_id }}">New Treatment</a></div>
+</div>
+
+                        
+<div class="card_container">
+{% if count_treat != 0 %}
+{% for i in treatment_list %}
+<div class="card card2">
+  <div class="card__body">
+
+    <label class="card__like"><input type="checkbox" name="check"><span class="card__label--text"></span></label>
+    <div class="card__tag">{{ i.industry }}</div>
+    <div class="card__title">{{ i.treatment_name }}</div>
+    <div class="card__txt">Lorem ipsum, dolor sit amet nihil minus similique hic quas similique consectetur adipisicing elit. Aspernatur tenetur distinctio neque?</div>
+    <div class="card__user">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSft5PLhaSb6QUdT0yRu3rjlam1Rt--WDJ6yQ&usqp=CAU" alt="" />
+        <div class="card__user--info">
+          <div class="card__user--name"> Lewis Daniels</div>
+          <div class="card__user--time"> Yesterday</div>
+        </div>
+    </div>
+    <!-- <a href="strategyTreatmentView.htm" class="card__link">View Treatment</a> -->
+    {% load quantapp_extras %}
+    <a href="StrategyTreatmentView?treat_id={{ i|mongo_id }}" class="card__link">View Treatment</a>
+
+</div>
+</div> <!-- card ends -->
+{% endfor %}
+{% else %}
+<div class="card card2">
+    <div class="card__body">
+        Please Add New Treatment to view this Area
+        <div class="card__title">{{ i.treatment_name }}</div>
+    </div>
+</div>
+
+{% endif %}
+  
+
+
+</div>
+<!-- Card Container ends -->
+
+    <!-- Content Ends -->
+{% endblock %}  
+
+
