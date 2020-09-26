@@ -1,0 +1,236 @@
+{% extends 'base_layout.html' %}
+{% load static %}
+{% block content %}
+
+
+
+    <div class="page">
+
+      <!-- Page Title -->
+      <div class="page__title">
+        <img src="{% static 'img/tca.png' %}" class="page__title--pic">
+        <span class="page__title--subHead">Vantage Quant</span>
+        <span class="page__title--txt">DataZen</span>
+      </div>
+      <!-- Page Title ends -->
+
+
+
+      <!-- Content Begins -->
+
+
+
+      <section class="section">
+        <div class="container">
+          <div class="tab">
+            <div class="tab__list">
+              <div class="tab__item"><a href="fileupload">Manual Upload</a></div>
+              <div class="tab__item"><a href="oldstrategy">View Uploaded Data</a></div>
+              <div class="tab__item"><a href="#">Upload from Terminal</a></div>
+              <div class="tab__item"><a href="new_param">New Parameter</a></div>
+              <div class="tab__item is--active"><a href="param_mapping">Parameter Mapping</a></div>
+            </div>
+            <div class="tab__content">
+              <div class="tab__content-item is--active tab">
+    
+                <div class="tab__content">
+
+ 
+<form method="post" action="create_param_mapping" enctype="multipart/form-data">{% csrf_token %}
+<input type="hidden" value="{{ strategyname }}" name="strategyname">
+<div class="topInfo">
+
+    <div class="topInfo__item">
+      <div class="topInfo__item--sub">
+        Select Files<br>
+        <div class="topInfo__item--txt">
+          <select class="topInput formItem10" name="file_name" id="file_name" onChange="getParam(this.value);"  >
+            <option value=""  disabled selected>Select File</option>
+              {% for param in params %}
+              <option value="{{ param }}">
+                {{param}}
+              </option>
+              {% endfor %}
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="topInfo__item">
+      <div class="topInfo__item--sub">
+        Select Parameter<br>
+        <div class="topInfo__item--txt">
+          <select class="topInput formItem10" name="parameter" id="parameter">
+            <option value=""  disabled selected>Select Parameters</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="topInfo__item">
+    <div class="topInfo__item--sub">
+      Select Savart Parameter<br>
+      <div class="topInfo__item--txt">
+        <select class="topInput formItem10" name="param_savart" id="param_savart">
+          <option value="" disabled selected>Select Parameter from Savart Database</option>
+              {% for param in savart_param %}
+              <option value="{{ param }}">
+                {{param.Param_Name}}
+              </option>
+              {% endfor %}
+        </select>
+      </div>
+    </div>
+  </div>
+
+    <div class="topInfo__item">
+    <div class="topInfo__item--sub">
+      <br>
+      <div class="topInfo__item--txt">
+        <input type="submit" value="Add Mapping" class="bttn formItem10">
+      </div>
+    </div>
+  </div>
+</form>
+
+</div>
+  
+  
+
+      <table id="table_id" width="100%" class="display table table-bordered table-hover dt-responsive">
+        <thead style="background-color:rgb(16, 62, 131); color:#fff;">
+          <tr>
+            <th></th>
+            <th class="leftAlign">File name</th>
+            <th class="leftAlign">File Parameter</th>
+            <th class="leftAlign">Savart Universe of Parameters</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for i in data %}
+          <tr>
+              <td></td>
+              <td>{{ i.ParamId }}</td>
+              <td>{{ i.Param_Name }}</td>
+              <td>{{ i.Param_Savart }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+
+<input type="button" value="Edit"   class="bttn formItem10">
+<input type="button" value="Delete" class="bttn formItem10">
+
+
+    </form>
+
+
+
+
+  </div>
+</div>
+
+
+</div>
+</div>
+</div>
+</section>
+
+
+<script>
+  function form_submit() {
+      document.getElementById("editform").submit();
+  }
+  $(document).ready(function() {
+      $('#example').DataTable();
+  });
+  $(document).ready(function() {
+      $('#parameter').select2();
+  });
+
+  $(document).ready(function() {
+      $('#file_name').select2();
+  });
+
+  $(document).ready(function() {
+      $('#param_savart').select2();
+  });
+
+  // ajax request for dependent dropdown
+  function getParam(val) {
+      $.ajax({
+          type: "GET",
+          url: "FetchParamsByFile/" + val,
+          success: function(result) {
+              console.log(result)
+              $.each(result, function(key, val) {
+                  //Here is where I want to parse each object and add to the HTML table
+                  $('#parameter').append(`<option value="${val}"> 
+                                 ${val} 
+                            </option>`);
+              });
+          }
+      });
+  }
+
+
+  function getParamedit(val) {
+
+      $.ajax({
+          type: "GET",
+          url: "FetchParamsByFile/" + val,
+          success: function(result) {
+              console.log(result)
+              $.each(result, function(key, val) {
+                  //Here is where I want to parse each object and add to the HTML table
+                  $('#parameter_edit').append(`<option value="${val}"> 
+                                 ${val} 
+                            </option>`);
+
+              });
+          }
+      });
+  }
+
+
+  jQuery("body").delegate(".viewdata", "click", function() {
+      $("#file_name_edit").trigger("change");
+      jQuery("#dataviewblock").modal();
+      var id = jQuery(this).attr("data-id");
+      alert(id);
+      $.ajax({
+          type: "GET",
+          url: "FetchParamMappingById/" + id,
+          dataType: "json",
+          success: function(data) {
+
+              console.log(data);
+              if (data) {
+                  // $("#file_name_edit").trigger("change");
+                  $('#file_name_edit').val(data.ParamId);
+                  $('#parameter_edit').val(data.Param_Name);
+                  $('#param_savart_edit').val(data.Param_Savart);
+                  $('#param_mapping_id').val(data._id);
+
+              } else {
+
+              }
+
+          }
+      });
+
+  });
+</script>
+
+
+
+
+
+
+
+
+      <!-- Content Ends -->
+
+
+{% endblock %} 

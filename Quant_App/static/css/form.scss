@@ -21,6 +21,12 @@
   background-color:var(--bg2);
 }
 
+
+.login__link{
+  text-decoration:none;
+  color:#203060;
+}
+
 // .searchBox {
 
 // }
@@ -28,14 +34,14 @@
 
 .searchBox__txt {
   border-radius: .2rem;
-  padding: 6px 6px 6px 16px;
+  padding: 6px 6px 6px 10px;
   margin: 0 0 0 10px;
 
   font-size: .9rem;
   font-family: sans-serif;
   font-weight: 400;
 
-  width:300px;
+  width:500px;
   max-width: 100%;
 
   display:inline-block;
@@ -275,11 +281,38 @@ form#msform.input[type="text"], form#msform.textarea {
 }
 
 
+.formItem10 {
+  color: var(--txt-box-txt);
+  background-color: var(--txt-box);
+}
+
+
+input.topInput,
+select.topInput {
+    width: 600px;
+    padding: 6px;
+    margin: 5px 0 0 0;
+
+    border-radius: 4px;
+    max-width:100%;
+    padding:6px;
+  }
+
+
+
+@media (max-width: 600px) {
+  .formItem10 {
+    width:100%;
+  }
+  
+}
+
 @media (max-width: 768px) {
 
 form#msform select {
-width:100%;
+  width:100%;
 }
+
 }
 
 .smallTxtBox {

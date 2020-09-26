@@ -346,3 +346,23 @@ def get_lineplots(Df9):
         s = ax.plot(D9.iloc[i,1:],label= str(D9.iloc[i,0]))
         leg = ax.legend(loc=9, bbox_to_anchor=(2,1));
         plots.append(s)
+
+def treatment_quartiles_df(df, wieghtage):
+    Quartiles = df.copy()
+    Quartiles = Quartiles.fillna(0)
+    # Quartiles = Quartiles[new_columns_list]
+    for i in range(2,len(Quartiles.columns[:-1])):
+    #     Data_h = Data_e.copy()
+        col = str(Quartiles.columns[i])
+        Quartiles[col+'_Rank'] = Quartiles.iloc[:,i].rank(method = 'first',ascending=0)
+    L = Quartiles.columns.get_loc('Shareprice_Appriciation') + 1
+    wieghtage = [int(i) for i in wieghtage]
+    wieghtage = wieghtage[2:-1]
+    Quartiles.iloc[:,L:] = Quartiles.iloc[:,L:] * wieghtage
+    col = Quartiles.iloc[: ,L:]
+    Quartiles['Average_Rank'] = col.mean(axis=1).round()
+    j = Quartiles.columns.get_loc("Average_Rank")
+    Quartiles['Weighatages_Rank'] = Quartiles.iloc[:,j].rank(method = 'first',ascending=1)
+    Quartiles["Quartiles"] = pd.qcut(Quartiles['Weighatages_Rank'].rank(method='first'), int(np.sqrt(Quartiles.shape[0]).round()) , labels=["Q1", "Q2", "Q3","Q4","Q5","Q6","Q7"])
+
+    return Quartiles

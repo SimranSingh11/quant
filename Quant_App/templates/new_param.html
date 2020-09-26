@@ -1,0 +1,171 @@
+
+
+{% extends 'base_layout.html' %}
+{% load static %}
+{% block content %}
+
+
+<div class="page">
+
+    <!-- Page Title -->
+    <div class="page__title">
+      <img src="{% static 'img/tca.png' %}" class="page__title--pic">
+      <span class="page__title--subHead">Vantage Quant</span>
+      <span class="page__title--txt">DataZen</span>
+    </div>
+    <!-- Page Title ends -->
+
+
+
+    <!-- Content Begins -->
+
+
+
+    <section class="section">
+      <div class="container">
+        <div class="tab">
+          <div class="tab__list">
+              <div class="tab__item"><a href="fileupload">Manual Upload</a></div>
+              <div class="tab__item"><a href="oldstrategy">View Uploaded Data</a></div>
+              <div class="tab__item"><a href="#">Upload from Terminal</a></div>
+              <div class="tab__item is--active"><a href="new_param">New Parameter</a></div>
+              <div class="tab__item"><a href="param_mapping">Parameter Mapping</a></div>
+            </div>
+          <div class="tab__content">
+            <div class="tab__content-item is--active tab">
+  
+              <div class="tab__content">
+
+
+<form class="rwd" method="post" action="create_new_param" enctype="multipart/form-data">{% csrf_token %}
+
+      <div class="formItem">
+          <label class="desc" id="title1" for="Field1">Parameter Name</label>
+          <div class="rwd">
+              <input id="Field1" name="parameter_name" type="text" class="field" value="" size="8" tabindex="1">
+          </div>
+        </div>
+
+
+
+        <div class="formItem">
+          <label class="desc" id="title1" for="Field1">Formula</label>
+          <div class="rwd">
+              <select class="" tabindex="2" required="required" name="formula">
+                  <option disabled selected>Select</option>
+                  <option value="Formula One">Formula One</option>
+                  <option value="Formula Two">Formula Two</option>
+                  <option value="Formula Three">Formula Three</option>
+                  <option value="Formula Four">Formula Four</option>
+              </select>
+          </div>
+        </div>
+
+
+
+        <div class="formItem">
+          <label class="desc" id="title1" for="Field1">Units</label>
+          <div>
+              <div class="rwd">
+                  <select class="" tabindex="2" required="required" name="units">
+                      <option disabled selected>Select</option>
+                      <option value="Unit One">Unit One</option>
+                      <option value="Unit Two">Unit Two</option>
+                      <option value="Unit Three">Unit Three</option>
+                  </select>
+              </div>                </div>
+        </div>
+
+
+
+        <div class="formItem">
+          <label class="desc" id="title1" for="Field1">Parameter List</label>
+          <div>
+              <div class="rwd">
+                  <select class="" tabindex="2" required="required" name="paramsid">
+                      <option disabled selected>Select</option>
+                      <option value="Option One">Option One</option>
+                      <option value="Option Two">Option Two</option>
+                      <option value="Option Three">Option Three</option>
+                  </select>
+              </div>                </div>
+        </div>
+
+
+
+
+
+        <div class="formItem">
+          <label class="desc" id="title1" for="Field1">Operator List</label>
+          <div>
+              <div class="rwd">
+                  <select class="" tabindex="2" required="required" name="operators">
+                      <option disabled selected>Select</option>
+                      <option value="Plus">Plus</option>
+                      <option value="Plus">Minus</option>
+                      <option value="Multiplication">Multiplication</option>
+                      <option value="Division">Division</option>
+                  </select>
+              </div>                </div>
+        </div>
+
+        <div class="formItem">
+          <label class="desc" id="title1" for="Field1">Comments</label>
+          <div class="rwd">
+              <textarea id="Field1" name="comments" type="text" style="height:180px;" class="field" value="" tabindex="11"></textarea>
+          </div>
+        </div>
+
+
+ 
+
+        <div class="formItem">
+          <div>
+              <input type="submit" class="bttn bttn_pri" value="Submit">
+              <input type="button" class="bttn" value="Cancel">
+          </div>
+        </div>
+  
+  
+
+
+
+
+
+  </form>
+
+
+
+
+</div>
+</div>
+
+
+</div>
+</div>
+</div>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Content Ends -->
+
+
+
+
+
+
+  </div>
+
+
+
+
+      {% endblock %} 

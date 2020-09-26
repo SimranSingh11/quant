@@ -1,0 +1,258 @@
+
+.card_container {
+  display:grid;
+  gap:10px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  justify-content: space-between;
+}
+
+
+.card {
+  background-color: var(--card);
+  border-radius: 10px;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  margin: 10px 10px;
+  display: inline-block;
+  position: relative;
+
+  // width: 260px;
+
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    padding: 25px;
+    min-height: 250px;
+}
+
+   &__tag {
+    background-color: var(--card-tag);
+    color: #fff;
+    border-radius: 50px;
+    font-size: 12px;
+    margin: 0;
+    padding: 2px 10px;
+    text-transform: uppercase;
+}
+
+
+&__title {
+    font-family: 'Open Sans', arial, verdana, sans-serif;
+    color: var(--card-title);
+    margin: 20px 0 0 0;
+    font-size: 1rem;
+  }
+  
+  &__txt {
+    font-size: .8rem;
+    line-height: 1.2;
+    padding: 6px 0 4px;
+    color:var(--card-txt);
+  }
+  
+  &__user {
+      display: flex;
+      margin-top: auto;
+  }
+  
+  &__user--name {
+    font-family: 'Open Sans', arial, verdana, sans-serif;
+    color: var(--card-user-txt);
+    font-size:.9rem;
+  }
+  
+  &__user--time {
+    font-size:.8rem;
+    color:#9f9f9f;
+  }
+  
+  
+  &__user img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 10px;
+      -o-object-fit: cover;
+      object-fit: cover;
+  }
+  
+  
+  &__link {
+      position: absolute;
+      width: 100%;
+      background-color: var(--card-link-bg);
+      bottom: 0;
+      right: 0;
+      padding: 4px;
+      font-family: Arial, Helvetica, sans-serif;
+      text-align: center;
+      font-size: .7rem;
+      margin: 6px 0 0 0;
+      text-decoration: none;
+      color:var(--card-link-txt);
+  }
+
+
+
+
+}
+
+
+.card2 {
+  // background-color: #f4f4f4;
+  border: 2px solid #9caef4;
+}
+
+label.card__like {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 0.2em;
+}
+
+
+.card__label--text {
+  font-size: 2rem;
+}
+
+label input[type="checkbox"] {
+    display: none;
+    opacity: 0;
+}
+input[type=checkbox] + .card__label--text::before {
+    content: "★";
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    display: inline-block;
+    color: silver;
+    padding: 0 2px 0 0;
+    -webkit-transition: all .6s ease-in-out;
+    transition: all .6s ease-in-out;
+    -webkit-font-smoothing: antialiased;
+}
+input[type="checkbox"]:checked + .card__label--text::before {
+  content: "★";
+  transition: all .6s ease-in-out;
+  color: #369;
+  animation: chkBox .4s ease-in;
+}
+
+@keyframes chkBox {
+    0% {
+      -webkit-transform: scale(0);
+              transform: scale(0);
+    }
+    80% {
+      -webkit-transform: scale(1.4);
+              transform: scale(1.4);
+    }
+    100% {
+      -webkit-transform: scale(1);
+              transform: scale(1);
+    }
+  }
+
+.topInfo {
+  display:flex;
+  flex-wrap: wrap;
+  max-width:1500px;
+  margin:0 0 10px 0;
+}
+
+
+.topInfo__item {
+  flex:1;
+}
+
+.topInfo__item--sub {
+  color: var(--topInfo-field);
+  margin: 6px 0;
+}
+
+.topInfo__item--txt {
+  font-size: .8rem;
+  color: var(--topInfo-value);
+}
+
+.topInfo .search {
+  flex:1;
+}
+
+.topInfo .bttn,
+.topInfo .bttn_pri,
+.topInfo__bttn {
+  margin:0;
+  padding:8px 10px;
+  font-size:.8rem;
+  height: 36px;
+  margin: 0 10px;
+}
+
+.bttn_pri a {
+  text-decoration:none;
+}
+
+.padding20 {
+  padding:20px 0 0 0;
+}
+
+
+.topInfo__item--select {
+  width: 300px;
+  padding: 6px 6px 6px 6px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+@media screen and (max-width:760px) {
+
+  // .card {
+  //   width:100%;
+  // }
+
+  .topInfo__item {
+    // width:100%;
+    display:block;
+    width:25%;
+  }
+
+  // select.topInfo__item--select {
+    // width:100%;
+  // }
+
+  .topInfo .bttn,
+  .topInfo .bttn_pri,
+  .topInfo__item--btn {
+    text-align:center;
+    // width:90vw;
+    margin: 4px auto;
+  }
+
+
+
+  .topInfo .search {
+    margin:0 auto;
+    display:block;
+    text-align:center;
+    width:100%;
+  }
+  
+
+
+
+}
+
+@media screen and (max-width:580px) {
+
+  .topInfo__item {
+    flex:1;
+    width:100%;
+  }
+
+
+}

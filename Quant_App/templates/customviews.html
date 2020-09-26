@@ -1,0 +1,221 @@
+{% extends 'base_layout.html' %}
+{% load static %}
+{% block content %}
+
+      <div class="page">
+
+        <!-- Update Page Title -->
+        <div class="page__title">
+          <img src="{% static 'img/output.png' %}" class="page__title--pic">
+          <span class="page__title--subHead">Vantage Quant</span>
+          <span class="page__title--txt">Output</span>
+        </div>
+
+        <!-- Content Begins -->
+
+
+
+
+
+
+
+       
+
+        <section class="section">
+          <div class="container">
+            <div class="tab">
+              <div class="tab__list">
+                <div class="tab__item"><a href="output.htm">Risk and Return</a></div>
+                <div class="tab__item is--active"><a href="output_custom.htm">Custom View</a></div>
+                <div class="tab__item"><a href="output_raw.htm">Raw Output</a></div>
+              </div>
+              <div class="tab__content">
+                <div class="tab__content-item is--active tab">
+      
+                  <div class="tab__content">
+
+
+
+                    <!-- <div class="output__option">
+                      <div class="output__option--name">File name</div>
+                      <div class="output__option--value">
+                        <select>
+                          <option>Select</option>
+                        </select>
+                      </div>
+                    </div> -->
+                    
+                    
+                    <form method="post" action="get_all_treat_data" enctype="multipart/form-data">{% csrf_token %}
+                    <div class="output__option">
+                      <div class="output__option--name">Treatment</div>
+                      <div class="output__option--value">
+                        <select id="treatment_id" name="treatment_id" onChange="getParam(this.value);">
+                          <option value="">Select Treatment</option>
+
+                          {% for treat in treatments %}
+                          {% load quantapp_extras %}
+                          <option value="{{ treat|mongo_id }}">
+                          {{ treat.treatment_name }}
+                          </option>
+                          {% endfor %}
+                        </select>
+                      </div>
+                    </div>
+                    
+                    
+                    
+                    <div class="output__option">
+                      <div class="output__option--name">Output Measures</div>
+                      <div class="output__option--value">
+                        <select id="output_measure" name="output_measure">
+                          <option value="">Select Output Measures</option>
+                          <!-- <option value="combination_quartile_view">Combination Quartile View</option> -->
+                          <option value="quartile_view">Quartile View</option>
+                          <option value="rank_view_all">Rank View Overall</option>
+                          <option value="rank_view_year">Rank View Yearly</option>
+                          <option value="parameter_view">Parameter View</option>
+                          <option value="industry_view">Industry View</option>
+                        </select>
+                      </div>
+                    </div>
+                    <br><br>
+
+                    <div class="bttn_pri bttn panel-trigger-right" style="display: inline-block;">
+                    Options
+                    </div>
+                    <br><br>
+                    <div id="panel2" class="panel panel-right">
+                        <div class="panel-container">
+                            <div class="panel-contents">
+
+
+                              <!-- <div class="panel-close-button"><img src="{%static 'img/close.png' %}"></div> -->
+                              <button class="bttn bttn-left">OK</button>
+
+
+
+                              <div class="tabs">
+                                <div class="tab">
+                                  <input type="checkbox" class="accordion" checked id="chck1">
+                                  <label class="tab-label" for="chck1">Parameters</label>
+                                  <div class="tab-content">
+                                    <!-- <form id="chkBoxes"> -->
+                                      
+                                        <div id="addparam">
+                                          
+                                          <!-- <span class="label-text1 login_font">FHC ROCE(%)</span> -->
+                                        </div>
+                                    <!-- </form> -->
+                                  </div>
+                                </div>
+                                <div class="tab">
+                                  <input type="checkbox" class="accordion" id="chck2">
+                                  <label class="tab-label" for="chck2">Show Ranks</label>
+                                  <div class="tab-content">
+                                    Text 2<br>
+                                    Text 2<br>
+                                    Text 2<br>
+                                    Text 2<br>
+                                    Text 2<br>
+                                    Text 2<br>
+                                    Text 2<br>
+                                    Text 2<br>
+                                    Text 2<br>
+                                    Text 2<br>
+                                    Text 2<br>
+                                    Text 2<br>
+                                    Text 2<br>
+                                    Text 2<br>
+                                  </div>
+                                </div>
+                                <div class="tab">
+                                  <input type="checkbox" class="accordion" id="chck3">
+                                  <label class="tab-label" for="chck3">Show Quartiles</label>
+                                  <div class="tab-content">
+                                    Text 3
+                                  </div>
+                                </div>
+                              </div>
+                              <br><br>
+                              </div>
+                              
+                            </div>
+                            <div class="panel-close-button"><img src="{% static 'img/close.png' %}"></div>
+                        </div>
+                    </div>
+                  </form>
+
+
+<table id="table_id" width="100%" class="smallFont display table table-bordered table-hover dt-responsive">
+    <thead style="background-color:rgb(16, 62, 131); color:#fff;">
+    <tr>
+      <th></th>
+
+      {% for column in columns %}
+      <th>{{ column }}</th>
+      {% endfor %}
+    </tr>
+    </thead>
+    
+    <tbody>
+            {% if value_list %} {% for val in value_list %}
+
+            <tr>
+              <td></td>
+                {% for v in val %}
+                <td>{{ v }}</td>
+                {% endfor %}
+            </tr>
+
+            {% endfor %} {% endif %}
+    </tbody>
+    </table>
+
+
+
+
+                  </div>
+                </div>
+
+      
+              </div>
+            </div>
+          </div>
+        </section>
+
+<script>
+
+// ajax request for dependent dropdown
+function getParam(val) {
+    $("#parameter").val("");
+    $.ajax({
+        type: "GET",
+        url: "GetParamsByTreatmentId/" + val,
+        success: function(result) {
+            console.log(result)
+            var x = 0;
+            $.each(result, function(key, val) {
+                //Here is where I want to parse each object and add to the HTML table
+                // $('#parameter').append(`<option value="${val}"> 
+                //                 ${val} 
+                //           </option>`);
+                $("#addparam").append("<label class='chkBox'><input type='checkbox' value='"+val+"' id='check"+x+"' name='parameter'><span class='label-text1 login_font'>"+val+'</span>');
+                x++;
+            });
+        }
+    });
+}
+
+</script>
+
+
+
+
+
+
+
+    <!-- Content Ends -->
+
+
+    {% endblock %}

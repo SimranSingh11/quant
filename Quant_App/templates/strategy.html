@@ -1,3 +1,113 @@
+
+{% extends 'base_layout.html' %}
+{% load static %}
+{% block content %}
+
+
+    <div class="page">
+
+      <!-- Page Title -->
+      <div class="page__title">
+        <img src="{% static 'img/tca.png' %}" class="page__title--pic">
+        <span class="page__title--subHead">Vantage Quant</span>
+        <span class="page__title--txt">DataZen</span>
+      </div>
+      <!-- Page Title ends -->
+
+
+
+      <!-- Content Begins -->
+
+
+
+      <section class="section">
+        <div class="container">
+          <div class="tab">
+            <div class="tab__list">
+              <div class="tab__item"><a href="fileupload">Manual Upload</a></div>
+              <div class="tab__item is--active"><a href="oldstrategy">View Uploaded Data</a></div>
+              <div class="tab__item"><a href="#">Upload from Terminal</a></div>
+              <div class="tab__item"><a href="new_param">New Parameter</a></div>
+              <div class="tab__item"><a href="param_mapping">Parameter Mapping</a></div>
+            </div>
+            <div class="tab__content">
+              <div class="tab__content-item is--active tab">
+    
+                <div class="tab__content">
+
+ 
+<form method="POST" action="oldstrategy " enctype="multipart/form-data ">{% csrf_token %}
+  <div class="topInfo">
+    
+    <div class="topInfo__item">
+        <div class="topInfo__item--sub">Share Price Data<br>
+            <div class="topInfo__item--txt">
+              <select class="topInput formItem10" name="filter_strategy">
+                <option value="" disabled selected>Select Files</option>
+                {% for param in params %}
+                <option value="{{ param }} ">
+                    {{param}}
+                </option>
+                {% endfor %}
+            </select>
+            </div>
+          </div>
+        </div>
+
+</div>
+<input type="submit" value="Submit" class="bttn bttn_pri">
+
+</form>
+
+
+      <table id="table_id" width="100%" class="display table table-bordered table-hover dt-responsive">
+        <thead style="background-color:rgb(16, 62, 131); color:#fff;">
+            {% if key_list %}
+            <tr>
+              <th></th>
+                {% for x in key_list %}
+                <th>{{ x }}</th>
+                {% endfor %}
+            </tr>
+            {% endif %}
+        </thead>
+        <tbody>
+            {% if value_list %} {% for val in value_list %}
+            <tr>
+                <td></td>
+                {% for v in val %}
+                <td>{{ v }}</td>
+                {% endfor %}
+            </tr>
+
+            {% endfor %} {% endif %}
+        </tbody>
+      </table>
+
+  </div>
+</div>
+
+
+</div>
+</div>
+</div>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+      <!-- Content Ends -->
+
+
+    {% endblock %}
+
 <!DOCTYPE html>
 <html>
 {% csrf_token %}

@@ -190,6 +190,8 @@ input[type="checkbox"]:checked + .card__label--text::before {
   -webkit-box-flex: 1;
       -ms-flex: 1;
           flex: 1;
+  width: 200px;
+  margin: 0 10px 0 0;
 }
 
 .topInfo__item--sub {
@@ -234,10 +236,6 @@ input[type="checkbox"]:checked + .card__label--text::before {
 }
 
 @media screen and (max-width: 760px) {
-  .topInfo__item {
-    display: block;
-    width: 25%;
-  }
   .topInfo .bttn,
   .topInfo .bttn_pri,
   .topInfo__item--btn {
@@ -257,7 +255,10 @@ input[type="checkbox"]:checked + .card__label--text::before {
     -webkit-box-flex: 1;
         -ms-flex: 1;
             flex: 1;
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
     width: 100%;
+    margin: 0 0 0 0;
   }
 }
 /*# sourceMappingURL=card.css.map */

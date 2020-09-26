@@ -17,6 +17,7 @@ from collections import defaultdict
 from bson.objectid import ObjectId
 import sys 
 from Quant_App.tasks import execute_computations
+from Quant_App.compute import treatment_quartiles_df
 
 myclient = pymongo.MongoClient("mongodb://localhost:27017/")
 mydb = myclient["V-Quant"]  ## DB
@@ -29,6 +30,7 @@ treat_param = mydb['TreatParam']
 tca_data = mydb["TCA"]  ## Table 
 industry = mydb["industry_universe"]  ## Table 
 param_mapping = mydb["ParamMapping"]  ## Table 
+new_param = mydb["NewParam"]  ## Table 
 return_risks_views = mydb["Return-Views"]
 treatments_combinations = mydb['Treatment_Output_Combinations']
 treat_all_dataframe = mydb["Treat_All_Dataframe"]
@@ -156,7 +158,8 @@ class DatalayersClass():
         ParamID  --  Selected Dropdown value to check in MongoDB
 
         """
-        paramId = str(paramID).strip()
+        paramId = str(paramID).strip() 
+        print("------param--->", paramID)  
         query = {"ParamID":paramId}
         my_dict = company.find_one(query)
         return my_dict['dataframe']
@@ -220,9 +223,21 @@ class DatalayersClass():
     def insert_creattreatment(treatment_by, correlation, math_operators, industry, strategyname, treatment_name, wieghtage, param_name):
 
         response = treatment.insert({"strat_name":strategyname, "treatment_name":treatment_name, "treatment_by":treatment_by, "correlation":correlation, "math_operators": math_operators, "industry":industry})
-        print("[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]", response)
         for (a, b) in zip(wieghtage, param_name):
             treat_param.insert({"treatment_id":ObjectId(response), "wieghtage":a, "param_name":b })
+        
+        # computations
+        StrategyName = str(strategyname)
+        query = {"StrategyName":StrategyName}
+        my_dict = mystrategies.find_one(query)
+        strat_df = pd.DataFrame.from_dict(my_dict['StrategyDF'])
+        quartiles_df = treatment_quartiles_df(strat_df, wieghtage)
+        
+        # inserting into database
+        quartiles_df = quartiles_df.to_dict("records")
+        strat_df = strat_df.to_dict("records")
+        treatments_combinations.insert({"treatment_id":ObjectId(response), "treatment_df":strat_df,'quartiles_df':quartiles_df})
+
         # execute_computations.delay(treatment_by, correlation, math_operators, industry, strategyname, treatment_name, wieghtage, param_name, str(response))
         
         return True
@@ -379,6 +394,11 @@ class DatalayersClass():
 
         param_mapping.insert({'ParamId':paramId ,'Param_Name':parameter ,"Param_Savart":param_savart, "is_deleted":1 })
         return "Successfully Inserted"
+    
+    def insert_new_param(paramname, formula, units, paramsid, operators, comments):
+
+        new_param.insert({'Param_Name':paramname ,'Formula':formula ,"Units":units, "Operators":operators,"Paramsid":paramsid, "Comments":comments, "is_deleted":1 })
+        return "Successfully Inserted"
 
     def update_param_mapping(parammappingId, paramId, parameter, param_savart):
         myquery = { "_id": ObjectId(parammappingId) } 
@@ -389,6 +409,11 @@ class DatalayersClass():
         # mapping = []
         param_mapping = mydb['ParamMapping']
         return param_mapping.find()
+    
+    def get_new_param():
+        # mapping = []
+        # param_mapping = mydb['ParamMapping']
+        return new_param.find()
 
     def get_param_mapping_by_id(id):
         parammappId = str(id)
@@ -410,7 +435,7 @@ class DatalayersClass():
     
     def get_treatment_dfs(treat_id, output_measure, parameter_list):
         treatment_id = str(treat_id)
-
+        TreatmentDf=pd.DataFrame()
         if output_measure == "combination_quartile_view":
             my_dict = treatments_combinations.find_one({'treatment_id': ObjectId(treatment_id) })
             TreatmentDf = pd.DataFrame.from_dict(my_dict['combinations_quartiles'])
@@ -427,10 +452,10 @@ class DatalayersClass():
             else:
                 TreatmentDf = Quartiles[parameter_list]
 
-                for i in range(1,len(TreatmentDf.columns[1:])):
-                #     Data_h = Data_e.copy()
+                for i in range(2,len(TreatmentDf.columns[:-1])):
+                # Data_h = Data_e.copy()
                     col = str(TreatmentDf.columns[i])
-                    TreatmentDf[col+'_Rank'] = TreatmentDf.iloc[:,i].rank(method = 'first',ascending=0)
+                    TreatmentDf[col+'_Rank'] = TreatmentDf.iloc[:,i].rank(method ='first',ascending=0)
                 L = TreatmentDf.columns.get_loc('Shareprice_Appriciation') + 1
                 col = TreatmentDf.iloc[: ,L:]
                 TreatmentDf['Average_Rank'] = col.mean(axis=1).round()
@@ -444,7 +469,7 @@ class DatalayersClass():
                 TreatmentDf = Ranking
             else:
                 TreatmentDf = Ranking[parameter_list]
-                for i in range(1,len(TreatmentDf.columns[1:])):
+                for i in range(2,len(TreatmentDf.columns[:-1])):
                 #     Data_h = Data_e.copy()
                     col = str(TreatmentDf.columns[i])
                     TreatmentDf[col+'_Rank'] = TreatmentDf.iloc[:,i].rank(method = 'first',ascending=0)
@@ -489,7 +514,21 @@ class DatalayersClass():
         return CombinationDf,TreatmentDf,UniqueDf
     
 
+    def get_Treatment_OPmeasures():
+        """
+        ## Depends on Selection of ParamID from Dropdown selection we will get data in Dataframe...
+        ParamID  --  Selected Dropdown value to check in MongoDB
 
+        """
+
+        paramID = "5f6b538d449a18ce548c837b"
+        paramId = str(paramID)
+        query = {"treatment_id":ObjectId(paramId)}
+        my_dict = treatments_combinations.find_one(query)
+
+        final_df = pd.DataFrame.from_dict(my_dict['treatment_df'])  ## Dict 2 Dataframe...
+
+        return final_df
     
 
 

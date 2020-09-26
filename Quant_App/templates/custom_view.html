@@ -78,12 +78,12 @@
                             <div class="form-group">
                                 <label>Treatment name  :  </label>
                                 <select class="form-control select2" style="width: 50%;" id="treatment_id" name="treatment_id" onChange="getParam(this.value);">
-                                    {% for treat in treatments %}
-                                    {% load quantapp_extras %}
-                                    <option value="{{ treat|mongo_id }}">
-                                      {{ treat.treatment_name }}
-                                    </option>
-                                    {% endfor %}
+                                        {% for treat in treatments %}
+                                        {% load quantapp_extras %}
+                                        <option value="{{ treat|mongo_id }}">
+                                        {{ treat.treatment_name }}
+                                        </option>
+                                        {% endfor %}
                             
                             </select>
                                 <div class="form-group">

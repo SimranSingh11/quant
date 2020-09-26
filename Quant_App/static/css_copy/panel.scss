@@ -1,0 +1,103 @@
+
+.chkBoxes {
+  margin:30px 0 0 0;
+}
+
+.chkBoxes h3 {
+  margin: 0 0 20px 0;
+}
+
+
+/* Main element. The page overlay */
+.panel {
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  top: 0;
+  left: 0;
+  width: 0;
+  overflow: hidden;
+  cursor: pointer;
+  /* Theese 3 vars controls the speed and size of the panel */
+  --panel-width: 500px;
+  --panel-height: 10vw;
+  --panel-transition-speed: 0.3s;
+}
+
+.panel.panel-active {
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  -webkit-transition: background var(--panel-transition-speed) linear;
+  transition: background var(--panel-transition-speed) linear;
+}
+
+.panel.panel-inactive {
+  width: 0vw;
+  height: 0vh;
+  background: rgba(0, 0, 0, 0);
+  -webkit-transition: background var(--panel-transition-speed) linear, width 0s linear var(--panel-transition-speed), height 0s linear var(--panel-transition-speed);
+  transition: background var(--panel-transition-speed) linear, width 0s linear var(--panel-transition-speed), height 0s linear var(--panel-transition-speed);
+}
+
+/* Panel Container. This is the element that slide in-out */
+.panel-container {
+  display: block;
+  position: absolute;
+  background: #eee;
+  padding:20px;
+  overflow: auto;
+  cursor: default;
+  -webkit-transition: var(--panel-transition-speed) transform ease-in-out;
+  transition: var(--panel-transition-speed) transform ease-in-out;
+  float: left;
+  z-index: 200;
+}
+
+
+
+/* Right side panel */
+.panel.panel-right .panel-container {
+  top: 0;
+  right: 0;
+  width: var(--panel-width);
+  max-width:98vw;
+  height: 100%;
+  -webkit-transform: translate(var(--panel-width), 0);
+          transform: translate(var(--panel-width), 0);
+  box-shadow: -3px 0 5px rgba(0, 0, 0, 0.2);
+  border-left: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.panel.panel-right.panel-inactive .panel-container {
+  -webkit-transform: translate(var(--panel-width), 0) !important;
+          transform: translate(var(--panel-width), 0) !important;
+}
+
+
+
+/* Expand panel */
+.panel.panel-active .panel-container {
+  -webkit-transform: translate(0, 0);
+          transform: translate(0, 0);
+}
+
+/* Panel Close Button */
+.panel-close-button {
+  position: absolute;
+  width: 2em;
+  height: 2em;
+  top: 20px;
+  right: 20px;
+//   color: #ddd;
+  background: rgb(121, 121, 121);
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: center;
+  -webkit-transition: color .4s ease-in-out;
+  transition: color .4s ease-in-out;
+}
+
+.panel-close-button:hover {
+  background-color: rgb(255, 106, 106);
+}

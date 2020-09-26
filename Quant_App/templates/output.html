@@ -1,0 +1,121 @@
+{% extends 'base_layout.html' %}
+{% load static %}
+{% block content %}
+
+      <div class="page">
+
+        <!-- Update Page Title -->
+        <div class="page__title">
+          <img src="{% static 'img/output.png' %}" class="page__title--pic">
+          <span class="page__title--subHead">Vantage Quant</span>
+          <span class="page__title--txt">Output</span>
+        </div>
+
+        <!-- Content Begins -->
+
+
+        <section class="section">
+          <div class="container">
+            <div class="tab">
+              <div class="tab__list">
+                <div class="tab__item is--active"><a href="risk_returns">Risk and Return</a></div>
+                <div class="tab__item"><a href="custom_view">Custom View</a></div>
+                <div class="tab__item"><a href="output_raw.htm">Raw Output</a></div>
+              </div>
+              <div class="tab__content">
+                <div class="tab__content-item is--active tab">
+      
+                  <div class="tab__content">
+
+<form method="post" action="upload_risk_return_file" enctype="multipart/form-data">{% csrf_token %}
+
+<!-- <div class="output__option">
+  <div class="output__option--name">File name</div>
+  <div class="output__option--value">
+    <select>
+      <option>Select</option>
+    </select>
+  </div>
+</div> -->
+
+<input type="file" name="file">
+
+<!-- <div class="output__option">
+  <div class="output__option--name">Treatment</div>
+  <div class="output__option--value">
+    <select>
+      <option>Select</option>
+    </select>
+  </div>
+</div> -->
+
+
+<div class="output__option">
+  <div class="output__option--name">Output Measures</div>
+  <div class="output__option--value">
+    <select name="file_name" id="file_name">
+      <option value="">Select File</option>
+      {% for returns in return_risks %}
+      <option value="{{ returns }}">
+        {{returns}}
+      </option>
+      {% endfor %}
+    </select>
+  </div>
+</div>
+<br><br>
+<button class="bttn">Submit</button>
+</form>
+<div class="container">
+  {% autoescape off %} {{ computation_df }} {% endautoescape %}
+</div>
+<table id="table_id" width="100%" class="display table table-bordered table-hover dt-responsive">
+  <thead style="background-color:rgb(16, 62, 131); color:#fff;">
+    <tr>
+      {% for column in columns %}
+      <th>{{ column }}</th>
+      {% endfor %}
+    </tr>
+    </thead>
+    
+    <tbody>
+            {% if value_list %} {% for val in value_list %}
+            <tr>
+                {% for v in val %}
+                <td>{{ v }}</td>
+                {% endfor %}
+            </tr>
+
+            {% endfor %} {% endif %}
+  </tbody>
+  </table>
+
+
+
+
+                  </div>
+                </div>
+
+      
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Content Ends -->
+
+
+    {% endblock %}

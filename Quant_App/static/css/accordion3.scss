@@ -1,0 +1,52 @@
+
+    #accordion5 {
+        margin:0px 14px 0 10px;
+        z-index: 100;
+        width:96%;
+        
+      }
+  
+        #accordion5 input[type=radio] {
+          display: none;
+        }
+        #accordion5 label {
+          color:var(--txt-head);
+          background: var(--bg-head);
+          border-radius: 3px;
+          cursor: pointer;
+          display: block;
+          margin-bottom: .125em;
+          padding: 20px 10px;
+          z-index: 20;
+        
+        }
+        #accordion5 label:hover {
+          background: #ccc;
+        }
+        
+        #accordion5 input[type=radio]:checked + label {
+          color:var(--txt-head);
+          background:  var(--bg-head);
+  
+          border-bottom-right-radius: 0;
+          border-bottom-left-radius: 0;
+          color: white;
+          margin-bottom: 0;
+        }
+        #accordion5 article {
+          background: #f7f7f7;
+          height:0px;
+          overflow:hidden;
+          z-index:10;
+        }
+        #accordion5 article p {
+          padding: 1em;
+        }
+        // #accordion5 input[type=radio]:checked article {
+        // }
+        #accordion5 input[type=radio]:checked ~ article {
+          border-bottom-left-radius: .25em;
+          border-bottom-right-radius: .25em;
+          height: auto;
+          margin-bottom: .125em;
+        }

@@ -74,7 +74,7 @@ def fileupload(request):
         f = request.FILES.getlist('file')
         for i in f:
             global filename
-            filename = str(i) 
+            filename = str(i)   
             #print('This is I Object:',i)
             with open('Quant_App/documents/' +  str(i), 'wb+') as destination:
                  for chunk in i.chunks():
@@ -122,10 +122,10 @@ def fileupload(request):
             # table_content1 = final_df.to_html() 
             # context = {'table_content1': table_content1}
             #return render(request,'upload.html',{'message': message,'table_content1':table_content1})
-            return render(request,'filtered.html',{'key_list':key_list, 'value_list':value_list, 'params':params})
+            return render(request,'upload.html',{'key_list':key_list, 'value_list':value_list, 'params':params})
 
     return render(request,'upload.html')
-
+    
 def filtered_data(request):
     """
     1. This functionality will bind Final Dataframe data as Parameters data into First Dropdown...
@@ -177,7 +177,7 @@ def User_login(request):
 
         if Status == "Success Full Login":
 
-            return render(request,'dashboard.html')
+            return redirect('Viewstrategies')  
 
         else:
             message = "USER Credentials Wrong..."
@@ -318,6 +318,7 @@ def create_treatment(request):
     industry = request.POST.get("industry")
     treatment_name = request.POST.get("treatment_name")
     strat_id = request.POST['strat_id']
+    
     return_message = DatalayersClass.insert_creattreatment(treatment_by, correlation, math_operators, industry, strategyname, treatment_name, wieghtage, param_name)    
 
     print("------------>", return_message)
@@ -475,9 +476,16 @@ def update_tca(request):
 def getall_paramsmapping(request):
     params = DatalayersClass.get_dataframes()
     data = DatalayersClass.get_param_mapping()
+    savart_param = DatalayersClass.get_new_param()
+    # return render(request,'param_mapping.html',{"params":params, 'data' : data })
+    return render(request,'parammapping.html',{"params":params, 'data' : data , 'savart_param':savart_param})
 
-    return render(request,'param_mapping.html',{"params":params, 'data' : data })
+def add_new_param(request):
+    params = DatalayersClass.get_dataframes()
+    data = DatalayersClass.get_param_mapping()
 
+    # return render(request,'param_mapping.html',{"params":params, 'data' : data })
+    return render(request,'new_param.html',{})
 
 
 def fetch_param_by_file(request, file):
@@ -498,6 +506,18 @@ def create_param_mapping(request):
         param_savart = request.POST['param_savart']
         DatalayersClass.insert_param_mapping(paramId, parameter, param_savart)
         return redirect('param_mapping')
+
+def create_new_param(request):
+
+    if request.method == 'POST':
+        paramname = request.POST['parameter_name']
+        formula = request.POST['formula']   
+        units = request.POST['units']   
+        paramsid = request.POST['paramsid']   
+        operators = request.POST['operators']   
+        comments = request.POST['comments']   
+        DatalayersClass.insert_new_param(paramname, formula, units, paramsid, operators, comments)
+        return redirect('new_param')
 
 def update_param_mapping(request):
 
@@ -570,8 +590,14 @@ def get_quartile_by_company(treat_df):
 def get_custom_views(request):
     treatments = DatalayersClass.getTreatments()
     params = DatalayersClass.get_dataframes()
+    # Dataframe = DatalayersClass.get_Treatment_OPmeasures()
+    # DFColumns = list(Dataframe.columns)
+    # Dataframe = Dataframe.to_dict("records")
 
-    return render(request,'custom_view.html',{'treatments':treatments, 'params': params})
+    # return render(request,'custom_view.html',{'treatments':treatments, 'params': params})
+    return render(request,'customviews.html',{'treatments':treatments, 'params': params})
+
+
 
 def get_all_treat_data(request):
     treatments = DatalayersClass.getTreatments()
@@ -584,29 +610,33 @@ def get_all_treat_data(request):
     print("------------>", treatment_id,parameter_list,output_measure) 
 
     get_treatement_df = DatalayersClass.get_treatment_dfs(treatment_id,output_measure,parameter_list)
-    columns = list(get_treatement_df.columns)
-    get_treatdf_dict = get_treatement_df.to_dict("records")
-    value_list = []
-    for i in get_treatdf_dict:
-        value = i.values()
-        value_list.append(value)
+    print("0000000000000000>", get_treatement_df) 
+    
+    if get_all_treat_data=='Empty DataFrame':
+        pass
+    else:   
+        columns = list(get_treatement_df.columns)
+        get_treatdf_dict = get_treatement_df.to_dict("records")
+        value_list = []
+        for i in get_treatdf_dict:
+            value = i.values()
+            value_list.append(value)
 
-    return render(request,'custom_view.html',{'treatments':treatments, 'params': params, "columns":columns, 'value_list':value_list})
+    return render(request,'customviews.html',{'treatments':treatments, 'params': params, "columns":columns, 'value_list':value_list})
 
 def get_params_by_treatment_id(request, id):
     get_treatement_df = DatalayersClass.get_treatment_dfs_by_id(id)
     columns = list(get_treatement_df.columns)
     return JsonResponse(columns,safe=False)
 
+
 def risk_return_view(request):
     # treatments = DatalayersClass.
     treatments  = DatalayersClass.getTreatments()
     return_risks_ = DatalayersClass.get_return_riskviews()
-    
-    
-    print('Treatments',type(treatments))
-    print('NNNN',treatments)
-    return render(request,'risk_return_view.html',{"treatments":treatments,"return_risks":return_risks_})
+
+    # return render(request,'risk_return_view.html',{"treatments":treatments,"return_risks":return_risks_})
+    return render(request,'output.html',{"treatments":treatments,"return_risks":return_risks_})
 
 
 def upload_risk_return_file(request):
@@ -659,71 +689,130 @@ def upload_risk_return_file(request):
         Q1_Port = new_df.loc[new_df['Quartiles'].isin(["Q1"])]
         Portfilio_df  = pd.DataFrame(Q1_Port.groupby('Portfolio')["Shareprice_Appriciation"].median())
         Portfilio_df['Sharp_ratio'] = (Portfilio_df.iloc[0:] - 0.06)/Portfilio_df.iloc[0:].std()
-        table_content1 = Portfilio_df.to_html()
-        return render(request,'risk_return_view.html',{"computation_df": table_content1 , "return_risks":return_risks_ })
+        Portfilio_df = Portfilio_df.reset_index()
+        # table_content1 = Portfilio_df.to_html()
+        columns = list(Portfilio_df.columns)
+        get_treatdf_dict = Portfilio_df.to_dict("records")
+        value_list = []
+        for i in get_treatdf_dict:
+            value = i.values()
+            value_list.append(value)
+
+        return render(request,'output.html',{"columns":columns, 'value_list':value_list , "return_risks":return_risks_})
     
     if drop_name == '1 Year Return (Historical)':
         new_df = years.copy()
         new_df["Quartiles"] = pd.qcut(new_df['Shareprice_Appriciation'].rank(method='first'), int(np.sqrt(new_df.shape[0])) , labels=["Q7", "Q6", "Q5","Q4","Q3","Q2","Q1"])
         Q1_Port = new_df.loc[new_df['Quartiles'].isin(["Q1"])]
         Portfilio_df  = pd.DataFrame(Q1_Port.groupby('Portfolio')["Shareprice_Appriciation"].median())
-        table_content1 = Portfilio_df.to_html()
-        return render(request,'risk_return_view.html',{"computation_df": table_content1 , "return_risks":return_risks_ })
+        # table_content1 = Portfilio_df.to_html()
+        Portfilio_df = Portfilio_df.reset_index()
+        columns = list(Portfilio_df.columns)
+        get_treatdf_dict = Portfilio_df.to_dict("records")
+        value_list = []
+        for i in get_treatdf_dict:
+            value = i.values()
+            value_list.append(value)
+
+        return render(request,'output.html',{"columns":columns, 'value_list':value_list , "return_risks":return_risks_ })
     
     if drop_name == '3 Year Return (Annualized) (Historical)':
         new_df = years.copy()
         new_df["Quartiles"] = pd.qcut(new_df['Share Appreciation for 3 years'].rank(method='first'), int(np.sqrt(new_df.shape[0])) , labels=["Q7", "Q6", "Q5","Q4","Q3","Q2","Q1"])
         Q1_Port_3years = new_df.loc[new_df['Quartiles'].isin(["Q1"])]
         Portfilio_df_3years  = pd.DataFrame(Q1_Port_3years.groupby('Portfolio')["Share Appreciation for 3 years"].median())
-        table_content1 = Portfilio_df_3years.to_html()
+        # table_content1 = Portfilio_df_3years.to_html()
+        Portfilio_df_3years = Portfilio_df_3years.reset_index()
+        columns = list(Portfilio_df_3years.columns)
+        get_treatdf_dict = Portfilio_df_3years.to_dict("records")
+        value_list = []
+        for i in get_treatdf_dict:
+            value = i.values()
+            value_list.append(value)
 
-        return render(request,'risk_return_view.html',{"computation_df": table_content1 , "return_risks":return_risks_ })
+        return render(request,'output.html',{"columns":columns, 'value_list':value_list , "return_risks":return_risks_ })
 
     if drop_name == '5 Year Return (Annualized) (Historical)':
         new_df = years.copy()
         new_df["Quartiles"] = pd.qcut(new_df['Share Appreciation for 5 years'].rank(method='first'), int(np.sqrt(new_df.shape[0])) , labels=["Q7", "Q6", "Q5","Q4","Q3","Q2","Q1"])
         Q1_Port_5years = new_df.loc[new_df['Quartiles'].isin(["Q1"])]
         Portfilio_df_5years  = pd.DataFrame(Q1_Port_5years.groupby('Portfolio')["Share Appreciation for 5 years"].median())
-        table_content1 = Portfilio_df_5years.to_html()
+        # table_content1 = Portfilio_df_5years.to_html()
+        Portfilio_df_5years = Portfilio_df_5years.reset_index()
+        columns = list(Portfilio_df_5years.columns)
 
-        return render(request,'risk_return_view.html',{"computation_df": table_content1 , "return_risks":return_risks_ })
+        get_treatdf_dict = Portfilio_df_5years.to_dict("records")
+        value_list = []
+        for i in get_treatdf_dict:
+            value = i.values()
+            value_list.append(value)
+
+        return render(request,'output.html',{"columns":columns, 'value_list':value_list , "return_risks":return_risks_ })
     
     if drop_name == 'Annualized Volatility':
         # years_index = years.columns.get_loc('Shareprice_Appriciation')
         new_df = years.copy()
         new_df['Volatality'] = new_df.iloc[:,12:].std(axis=1,skipna = True)
         Volatality = new_df[["Company Name","Shareprice_Appriciation","Share Appreciation for 3 years","Share Appreciation for 5 years","Volatality"]]
-        table_content1 = Volatality.to_html()
+        # table_content1 = Volatality.to_html()
+        Volatality = Volatality.reset_index()
+        columns = list(Volatality.columns)
+        get_treatdf_dict = Volatality.to_dict("records")
+        value_list = []
+        for i in get_treatdf_dict:
+            value = i.values()
+            value_list.append(value)
 
 
-        return render(request,'risk_return_view.html',{"computation_df": table_content1 , "return_risks":return_risks_ })
+        return render(request,'output.html',{"columns":columns, 'value_list':value_list , "return_risks":return_risks_ })
     
     if drop_name == '1 year Maximum Drawdown':
         new_df = years.copy()
         new_df["Quartiles"] = pd.qcut(new_df['Shareprice_Appriciation'].rank(method='first'), int(np.sqrt(new_df.shape[0])) , labels=["Q7", "Q6", "Q5","Q4","Q3","Q2","Q1"])
         Q1_Port_1year = new_df.loc[new_df['Quartiles'].isin(["Q1"])]
         Maximum_Drawdown_1year = (Q1_Port_1year['Shareprice_Appriciation'].min() - Q1_Port_1year['Shareprice_Appriciation'].max())/Q1_Port_1year['Shareprice_Appriciation'].max()
-        table_content1 = Maximum_Drawdown_1year
+        # table_content1 = Maximum_Drawdown_1year
+        Maximum_Drawdown_1year = Maximum_Drawdown_1year.reset_index()
+        columns = list(Maximum_Drawdown_1year.columns)
+        get_treatdf_dict = Maximum_Drawdown_1year.to_dict("records")
+        value_list = []
+        for i in get_treatdf_dict:
+            value = i.values()
+            value_list.append(value)
         
-        return render(request,'risk_return_view.html',{"computation_df": table_content1 , "return_risks":return_risks_ })
+        return render(request,'output.html',{"columns":columns, 'value_list':value_list , "return_risks":return_risks_ })
     
     if drop_name == '3 year Maximum Drawdown':
         new_df = years.copy()
         new_df["Quartiles"] = pd.qcut(new_df['Share Appreciation for 3 years'].rank(method='first'), int(np.sqrt(new_df.shape[0])) , labels=["Q7", "Q6", "Q5","Q4","Q3","Q2","Q1"])
         Q1_Port_3year = new_df.loc[new_df['Quartiles'].isin(["Q1"])]
         Maximum_Drawdown_3year = (Q1_Port_3year['Share Appreciation for 3 years'].min() - Q1_Port_3year['Share Appreciation for 3 years'].max())/Q1_Port_3year['Share Appreciation for 3 years'].max()
-        table_content1 = Maximum_Drawdown_3year
+        # table_content1 = Maximum_Drawdown_3year
+        Maximum_Drawdown_3year = Maximum_Drawdown_3year.reset_index()
+        columns = list(Maximum_Drawdown_3year.columns)
+        get_treatdf_dict = Maximum_Drawdown_3year.to_dict("records")
+        value_list = []
+        for i in get_treatdf_dict:
+            value = i.values()
+            value_list.append(value)
 
-        return render(request,'risk_return_view.html',{"computation_df": table_content1 , "return_risks":return_risks_ })
+        return render(request,'output.html',{"columns":columns, 'value_list':value_list , "return_risks":return_risks_ })
     
     if drop_name == '5 year Maximum Drawdown':
         new_df = years.copy()
         new_df["Quartiles"] = pd.qcut(new_df['Share Appreciation for 5 years'].rank(method='first'), int(np.sqrt(new_df.shape[0])) , labels=["Q7", "Q6", "Q5","Q4","Q3","Q2","Q1"])
         Q1_Port_5year = new_df.loc[new_df['Quartiles'].isin(["Q1"])]
         Maximum_Drawdown_5year = (Q1_Port_5year['Share Appreciation for 5 years'].min() - Q1_Port_5year['Share Appreciation for 5 years'].max())/Q1_Port_5year['Share Appreciation for 5 years'].max()
-        table_content1 = Maximum_Drawdown_5year
+        # table_content1 = Maximum_Drawdown_5year
+        Maximum_Drawdown_5year = Maximum_Drawdown_5year.reset_index()
+        columns = list(Maximum_Drawdown_5year.columns)
+        get_treatdf_dict = Maximum_Drawdown_5year.to_dict("records")
+        value_list = []
+        for i in get_treatdf_dict:
+            value = i.values()
+            value_list.append(value)
 
-        return render(request,'risk_return_view.html',{"computation_df": table_content1 , "return_risks":return_risks_ })
+        return render(request,'output.html',{"columns":columns, 'value_list':value_list , "return_risks":return_risks_ })
 
     if drop_name == '1 year Maximum Drawdown Ratio':
         new_df = years.copy()
@@ -733,8 +822,15 @@ def upload_risk_return_file(request):
         Portfilio_df_1year  = pd.DataFrame(Q1_Port_1year.groupby('Portfolio')["Shareprice_Appriciation"].median())
         Portfilio_df_1year["Return/MaximumDrawdow"] = Portfilio_df_1year/Maximum_Drawdown_1year
 
-        table_content1 = Portfilio_df_1year.to_html()
-        return render(request,'risk_return_view.html',{"computation_df": table_content1 , "return_risks":return_risks_ })
+        # table_content1 = Portfilio_df_1year.to_html()
+        Portfilio_df_1year = Portfilio_df_1year.reset_index()
+        columns = list(Portfilio_df_1year.columns)
+        get_treatdf_dict = Portfilio_df_1year.to_dict("records")
+        value_list = []
+        for i in get_treatdf_dict:
+            value = i.values()
+            value_list.append(value)
+        return render(request,'output.html',{"columns":columns, 'value_list':value_list , "return_risks":return_risks_ })
     
     if drop_name == '3 year Maximum Drawdown Ratio':
         new_df = years.copy()
@@ -744,8 +840,15 @@ def upload_risk_return_file(request):
         Maximum_Drawdown_3year = (Q1_Port_3year['Share Appreciation for 3 years'].min() - Q1_Port_3year['Share Appreciation for 3 years'].max())/Q1_Port_3year['Share Appreciation for 3 years'].max()
         Portfilio_df_3year  = pd.DataFrame(Q1_Port_3year.groupby('Portfolio')["Share Appreciation for 3 years"].median())
         Portfilio_df_3year["Return/MaximumDrawdow"] = Portfilio_df_3year/Maximum_Drawdown_3year
-        table_content1 = Portfilio_df_3year.to_html()
-        return render(request,'risk_return_view.html',{"computation_df": table_content1 , "return_risks":return_risks_ })
+        # table_content1 = Portfilio_df_3year.to_html()
+        Portfilio_df_3year = Portfilio_df_3year.reset_index()
+        columns = list(Portfilio_df_3year.columns)
+        get_treatdf_dict = Portfilio_df_3year.to_dict("records")
+        value_list = []
+        for i in get_treatdf_dict:
+            value = i.values()
+            value_list.append(value)
+        return render(request,'output.html',{"columns":columns, 'value_list':value_list , "return_risks":return_risks_ })
 
     if drop_name == '5 year Maximum Drawdown Ratio':
         new_df = years.copy()
@@ -757,74 +860,142 @@ def upload_risk_return_file(request):
 
         Portfilio_df_5year["Return/MaximumDrawdow"] = Portfilio_df_5year/Maximum_Drawdown_5year
 
-        table_content1 = Portfilio_df_5year.to_html()
-        return render(request,'risk_return_view.html',{"computation_df": table_content1 , "return_risks":return_risks_ })
+        # table_content1 = Portfilio_df_5year.to_html()
+        Portfilio_df_5year = Portfilio_df_5year.reset_index()
+        columns = list(Portfilio_df_5year.columns)
+        get_treatdf_dict = Portfilio_df_5year.to_dict("records")
+        value_list = []
+        for i in get_treatdf_dict:
+            value = i.values()
+            value_list.append(value)
+        return render(request,'output.html',{"columns":columns, 'value_list':value_list , "return_risks":return_risks_ })
 
     if drop_name == 'Monthly Standard Deviation':
         
         F['Std on Monthly'] = F.iloc[:,14:-1].std(axis = 1,skipna=True)
         MonthlyStd = F[['Company Name',"Std on Monthly"]]
-        table_content1 = MonthlyStd.to_html()
-
-        return render(request,'risk_return_view.html',{"computation_df": table_content1 , "return_risks":return_risks_ })
+        # table_content1 = MonthlyStd.to_html()
+        MonthlyStd = MonthlyStd.reset_index()
+        columns = list(MonthlyStd.columns)
+        get_treatdf_dict = MonthlyStd.to_dict("records")
+        value_list = []
+        for i in get_treatdf_dict:
+            value = i.values()
+            value_list.append(value)
+        return render(request,'output.html',{"columns":columns, 'value_list':value_list , "return_risks":return_risks_ })
 
     if drop_name == 'Min. Monthly Return':
         F["Minimum_Rows_Monthly"] = F.iloc[:,14:-2].min(axis=1,skipna=True)
         Min_Monthly_Return  = pd.DataFrame(F.groupby('Portfolio')["Minimum_Rows_Monthly"].min())
-        table_content1 = Min_Monthly_Return.to_html()
-
-        return render(request,'risk_return_view.html',{"computation_df": table_content1 , "return_risks":return_risks_ })
+        # table_content1 = Min_Monthly_Return.to_html()
+        Min_Monthly_Return = Min_Monthly_Return.reset_index()
+        columns = list(Min_Monthly_Return.columns)
+        get_treatdf_dict = Min_Monthly_Return.to_dict("records")
+        value_list = []
+        for i in get_treatdf_dict:
+            value = i.values()
+            value_list.append(value)
+        return render(request,'output.html',{"columns":columns, 'value_list':value_list , "return_risks":return_risks_ })
     
     if drop_name == 'Avg. Monthly Return':
         F["Minimum_Rows_Monthly"] = F.iloc[:,14:-2].min(axis=1,skipna=True)
         Min_Monthly_Return_Avg  = pd.DataFrame(F.groupby('Portfolio')["Minimum_Rows_Monthly"].mean())
-        table_content1 = Min_Monthly_Return_Avg.to_html()
+        # table_content1 = Min_Monthly_Return_Avg.to_html()
+        Min_Monthly_Return_Avg = Min_Monthly_Return_Avg.reset_index()
+        columns = list(Min_Monthly_Return_Avg.columns)
+        get_treatdf_dict = Min_Monthly_Return_Avg.to_dict("records")
+        value_list = []
+        for i in get_treatdf_dict:
+            value = i.values()
+            value_list.append(value)
 
-        return render(request,'risk_return_view.html',{"computation_df": table_content1 , "return_risks":return_risks_ })
+        return render(request,'output.html',{"columns":columns, 'value_list':value_list , "return_risks":return_risks_ })
 
     if drop_name == 'Percent of Month with Positive performance':
         F["Maximum_MonthlyReturn"] = F.iloc[:,14:-3].max(axis=1,skipna=True)
         Min_Monthly_Return_max  = pd.DataFrame(F.groupby('Portfolio')["Maximum_MonthlyReturn"].max())
-        table_content1 = Min_Monthly_Return_max.to_html()
+        # table_content1 = Min_Monthly_Return_max.to_html()
+        Min_Monthly_Return_max = Min_Monthly_Return_max.reset_index()
+        columns = list(Min_Monthly_Return_max.columns)
+        get_treatdf_dict = Min_Monthly_Return_max.to_dict("records")
+        value_list = []
+        for i in get_treatdf_dict:
+            value = i.values()
+            value_list.append(value)
 
-        return render(request,'risk_return_view.html',{"computation_df": table_content1 , "return_risks":return_risks_ })
+        return render(request,'output.html',{"columns":columns, 'value_list':value_list , "return_risks":return_risks_ })
 
     if drop_name == 'Daily Standard Deviation':
         
         Daily['Std on Daily'] = Daily.iloc[:,24:].std(axis = 1,skipna=True)
         Daily_standard_deviation = pd.DataFrame(Daily[['Company Name','Portfolio','Std on Daily']])
-        table_content1 = Daily_standard_deviation.to_html()
+        # table_content1 = Daily_standard_deviation.to_html()
+        Daily_standard_deviation = Daily_standard_deviation.reset_index()
+        columns = list(Daily_standard_deviation.columns)
+        get_treatdf_dict = Daily_standard_deviation.to_dict("records")
+        value_list = []
+        for i in get_treatdf_dict:
+            value = i.values()
+            value_list.append(value)
 
-        return render(request,'risk_return_view.html',{"computation_df": table_content1 , "return_risks":return_risks_ })
+        return render(request,'output.html',{"columns":columns, 'value_list':value_list , "return_risks":return_risks_ })
 
     if drop_name == 'Average Daily Return':
         Daily["Average Daily Return"] = Daily.iloc[:,24:].mean(axis=1,skipna=True)
         Average_DailyReturns_ByPortfolio  = pd.DataFrame(Daily.groupby('Portfolio')["Average Daily Return"].median())
-        table_content1 = Average_DailyReturns_ByPortfolio.to_html()
+        # table_content1 = Average_DailyReturns_ByPortfolio.to_html()
+        Average_DailyReturns_ByPortfolio = Average_DailyReturns_ByPortfolio.reset_index()
+        columns = list(Average_DailyReturns_ByPortfolio.columns)
+        get_treatdf_dict = Average_DailyReturns_ByPortfolio.to_dict("records")
+        value_list = []
+        for i in get_treatdf_dict:
+            value = i.values()
+            value_list.append(value)
 
-        return render(request,'risk_return_view.html',{"computation_df": table_content1 , "return_risks":return_risks_ })
+        return render(request,'output.html',{"columns":columns, 'value_list':value_list , "return_risks":return_risks_ })
     
     if drop_name == 'Minimum Daily Return':
         Daily["Minimum_Daily"] = Daily.iloc[:,24:].min(axis=1,skipna=True)
         Minimum_DailyReturns_ByPortfolio  = pd.DataFrame(Daily.groupby('Portfolio')["Minimum_Daily"].median())
-        table_content1 = Minimum_DailyReturns_ByPortfolio.to_html()
+        # table_content1 = Minimum_DailyReturns_ByPortfolio.to_html()
+        Minimum_DailyReturns_ByPortfolio = Minimum_DailyReturns_ByPortfolio.reset_index()
+        columns = list(Minimum_DailyReturns_ByPortfolio.columns)
+        get_treatdf_dict = Minimum_DailyReturns_ByPortfolio.to_dict("records")
+        value_list = []
+        for i in get_treatdf_dict:
+            value = i.values()
+            value_list.append(value)
 
-        return render(request,'risk_return_view.html',{"computation_df": table_content1 , "return_risks":return_risks_ })
+        return render(request,'output.html',{"columns":columns, 'value_list':value_list , "return_risks":return_risks_ })
 
     if drop_name == 'Return / Risk Ratio':
         d = daily.copy()
         d['Return_Risk_Ratio'] = d.iloc[:,2:].mean(axis=1) / d.iloc[:,2:].std(axis=1,skipna=True)
         Return_Riskratio_Daily = pd.DataFrame(d.groupby('Portfolio')["Return_Risk_Ratio"].median())
 
-        table_content1 = Return_Riskratio_Daily.to_html()
-        return render(request,'risk_return_view.html',{"computation_df": table_content1 , "return_risks":return_risks_ })
+        # table_content1 = Return_Riskratio_Daily.to_html()
+        Return_Riskratio_Daily = Return_Riskratio_Daily.reset_index()
+        columns = list(Return_Riskratio_Daily.columns)
+        get_treatdf_dict = Return_Riskratio_Daily.to_dict("records")
+        value_list = []
+        for i in get_treatdf_dict:
+            value = i.values()
+            value_list.append(value)
+        return render(request,'output.html',{"columns":columns, 'value_list':value_list  , "return_risks":return_risks_ })
 
     if drop_name == 'Monthly Return risk ratio':
         m = monthly.copy()
         m['Return_Risk_Ratio'] = m.iloc[:,4:].mean(axis=1) / m.iloc[:,4:].std(axis=1,skipna=True)
         Return_Riskratio = pd.DataFrame(m.groupby('Portfolio')["Return_Risk_Ratio"].median())
-        table_content1 = Return_Riskratio.to_html()
-        return render(request,'risk_return_view.html',{"computation_df": table_content1 , "return_risks":return_risks_ })
+        # table_content1 = Return_Riskratio.to_html()
+        Return_Riskratio = Return_Riskratio.reset_index()
+        columns = list(Return_Riskratio.columns)
+        get_treatdf_dict = Return_Riskratio.to_dict("records")
+        value_list = []
+        for i in get_treatdf_dict:
+            value = i.values()
+            value_list.append(value)
+        return render(request,'output.html',{"columns":columns, 'value_list':value_list  , "return_risks":return_risks_ })
 
         
 
