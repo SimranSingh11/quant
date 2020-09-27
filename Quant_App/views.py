@@ -21,8 +21,8 @@ import matplotlib.pyplot as plt
 # %matplotlib inline
 import time
 import seaborn as sns
-from Quant_App.compute import automate_Raking, check_consequtive_fall_dfs, get_summary, transpose_rowindex, get_bestparametes_Combinations_unique
 
+from Quant_App.compute import treatment_quartiles_df,automate_Raking,check_consequtive_fall_dfs,get_summary,transpose_rowindex,get_bestparametes_Combinations_unique
 
 @csrf_exempt
 def show_data(request):
@@ -336,6 +336,8 @@ def create_treatment(request):
 
 
 
+
+
 def update_treatment(request):
     treat_id = request.GET['treat_id']
     get_list = DatalayersClass.treatment_by_id(treat_id)
@@ -531,50 +533,170 @@ def update_param_mapping(request):
 
 # visuals
 
+# def visual(request):
+#     treatments = DatalayersClass.getTreatments()
+    
+#     if request.method == 'POST':
+#         treatment_id = request.POST['treatment_id']
+#         df = DatalayersClass.get_dfs_by_id(treatment_id)
+#         combination_df = df[0]
+#         treat_df = df[1]
+#         treatment_df = get_quartile_by_company(treat_df)
+#         unique_df = df[2]
+#         x_axis_com = combination_df['Row_Indexing'][:20]
+#         y_axis_com = combination_df['Q1'][:20]
+        
+#         x_axis_unique = list(range(0,20))
+#         y_axis_unique = unique_df['Q1'][:20]
+
+#         x_axis_treat_not_str = treatment_df['Company Name']
+#         x_axis_treat = {str(x) for x in x_axis_treat_not_str}
+#         print("================>",x_axis_treat)
+#         y_axis_treat = treatment_df['Shareprice_Appriciation']
+
+#         combination_df_altered = combination_df[:20].to_html()
+#         unique_df_altered = unique_df[:20].to_html()
+#         treatment_df_altered = treatment_df[['Company Name','Shareprice_Appriciation']].to_html()
+#         return render(request,'visuals.html',{
+#             'treatments':treatments,
+#             'x_axis_com':list(x_axis_com),
+#             'y_axis_com':list(y_axis_com),
+#             'x_axis_unique':x_axis_unique,
+#             'y_axis_unique':list(y_axis_unique),
+#             'x_axis_treat':x_axis_treat,
+#             'y_axis_treat':list(y_axis_treat),
+#             "combination_df_altered": combination_df_altered,
+#             "unique_df_altered":unique_df_altered,
+#             "treatment_df_altered":treatment_df_altered
+#             })
+
+
+#     return render(request,'newvisual.html',{'treatments':treatments }) 
+
+# visual updated code
 def visual(request):
     treatments = DatalayersClass.getTreatments()
     
     if request.method == 'POST':
+        #treatment_id = "5f6ca3ee3b24926598222deb"
         treatment_id = request.POST['treatment_id']
+        print(treatment_id)
         df = DatalayersClass.get_dfs_by_id(treatment_id)
+        print(df)
         combination_df = df[0]
-        treat_df = df[1]
-        treatment_df = get_quartile_by_company(treat_df)
-        unique_df = df[2]
-        x_axis_com = combination_df['Row_Indexing'][:20]
-        y_axis_com = combination_df['Q1'][:20]
+        CombiDF = combination_df.to_dict("records")
+        CombiDF = combination_df[:10].to_html()
         
-        x_axis_unique = list(range(0,20))
-        y_axis_unique = unique_df['Q1'][:20]
+        treat_df = df[1]
+        print('Before HHH')
+        treatment_df = get_quartile_by_company(treat_df)
+        print('HHHHH')
+        print(treatment_df)
+        unique_df = df[2]
+        UniqueDF = unique_df.to_dict("records")
+        UniqueDF = unique_df[:10].to_html()
+
+        ## For Template Table
+
+        CombinColumns = list(combination_df.columns[1:3])
+        Combinational_Tbldf = combination_df.iloc[:10,1:3].to_dict("records")
+        Combi_value_list = []
+        for i in Combinational_Tbldf:
+            value = i.values()
+            Combi_value_list.append(value)
+
+        
+        UnidfColumns = list(unique_df.columns[:2])
+        Unidf_table = unique_df.iloc[:10,:2].to_dict("records")
+        Unidf_value_list = []
+        for i in Unidf_table:
+            value = i.values()
+            Unidf_value_list.append(value)
+
+        ## Table Changes
+
+        if len(combination_df) != 0:
+            x_axis_com = combination_df['Row_Indexing'][:20]
+            y_axis_com = combination_df['Q1'][:20]
+        if len(unique_df) != 0:
+            x_axis_unique = list(range(0,10))
+            y_axis_unique = unique_df['Q1'][:10]
 
         x_axis_treat_not_str = treatment_df['Company Name']
         x_axis_treat = {str(x) for x in x_axis_treat_not_str}
         print("================>",x_axis_treat)
         y_axis_treat = treatment_df['Shareprice_Appriciation']
 
-        combination_df_altered = combination_df[:20].to_html()
-        unique_df_altered = unique_df[:20].to_html()
+
+
+        # combination_df_altered = combination_df[:20].to_html()
+        # unique_df_altered = unique_df[:20].to_html()
+        treatment_df_table =   treatment_df[['Company Name','Shareprice_Appriciation']]
         treatment_df_altered = treatment_df[['Company Name','Shareprice_Appriciation']].to_html()
-        return render(request,'visuals.html',{
-            'treatments':treatments,
-            'x_axis_com':list(x_axis_com),
-            'y_axis_com':list(y_axis_com),
-            'x_axis_unique':x_axis_unique,
-            'y_axis_unique':list(y_axis_unique),
-            'x_axis_treat':x_axis_treat,
-            'y_axis_treat':list(y_axis_treat),
-            "combination_df_altered": combination_df_altered,
-            "unique_df_altered":unique_df_altered,
-            "treatment_df_altered":treatment_df_altered
-            })
+        Treatment_table_colums= list(treatment_df_table.columns)
+        treatment_df_altered_values = treatment_df_table.to_dict("records")
+        treatement_values = []
+        for i in treatment_df_altered_values:
+            value = i.values()
+            treatement_values.append(value)
+
+        if len(combination_df) != 0 and len(unique_df) != 0:
+              
+            return render(request,'newvisual.html',{
+                # 'treatments':treatments,
+                 "Treatment_table_colums" : Treatment_table_colums,
+                "treatement_values"  :treatement_values,
+
+                "CombinColumns" :CombinColumns,
+                "Combi_value_list":Combi_value_list,
+
+                "UnidfColumns":UnidfColumns,
+                "Unidf_value_list":Unidf_value_list,
 
 
-    return render(request,'visuals.html',{'treatments':treatments }) 
+
+                'x_axis_com':list(x_axis_com),
+                'y_axis_com':list(y_axis_com),
+                'x_axis_unique':x_axis_unique,
+                'y_axis_unique':list(y_axis_unique),
+                'treatments':treatments,
+                'x_axis_treat':x_axis_treat,
+                'y_axis_treat':list(y_axis_treat),
+                # "combination_df_altered": combination_df_altered,
+                # "unique_df_altered":unique_df_altered,
+                "treatment_df_altered":treatment_df_altered,
+                "UniqueDF" : UniqueDF,
+                "CombiDF" : CombiDF
+
+                })
+
+        else:
+
+            return render(request,'newvisual.html',{
+                # 'treatments':treatments,
+                # 'x_axis_com':list(x_axis_com),
+                # 'y_axis_com':list(y_axis_com),
+                # 'x_axis_unique':x_axis_unique,
+                # 'y_axis_unique':list(y_axis_unique),
+                "Treatment_table_colums" : Treatment_table_colums,
+                "treatement_values"  :treatement_values,
+
+                'treatments':treatments,
+                'x_axis_treat':x_axis_treat,
+                'y_axis_treat':list(y_axis_treat),
+                # "combination_df_altered": combination_df_altered,
+                # "unique_df_altered":unique_df_altered,
+                "treatment_df_altered":treatment_df_altered
+                })
+    #return render(request,'vs.html',{'treatments':treatments })
+    return render(request,'newvisual.html',{'treatments':treatments })
+    #return render(request,'vs.html',{'x_axis_treat':x_axis_treat,'y_axis_treat':list(y_axis_treat) }) 
+
 
 def get_quartile_by_company(treat_df):
     Quartiles = treat_df.copy()
     # Quartiles = Quartiles[new_columns_list]
-    for i in range(1,len(Quartiles.columns[1:])):
+    for i in range(2,len(Quartiles.columns[:-1])):
     #     Data_h = Data_e.copy()
         col = str(Quartiles.columns[i])
         Quartiles[col+'_Rank'] = Quartiles.iloc[:,i].rank(method = 'first',ascending=0)

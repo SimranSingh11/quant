@@ -16,6 +16,7 @@
         <table id="table_id" width="100%" class="display table table-bordered table-hover dt-responsive">
           <thead style="background-color:rgb(16, 62, 131); color:#fff;">
               <tr>
+                <th></th>
                   <th>Purchase Date</th>
                   <th>Broker Name</th>
                   <th>Purchase Type</th>
@@ -32,6 +33,7 @@
           <tbody>
             {% for tca in TCA_list %}
             <tr>
+              <td></td>
               <td><a href="tcaView.htm">{{ tca.Purchase_Date }}</a></td>
               <td>{{ tca.Broker_Name }}</td>
               <td>{{ tca.Purchasetype }}</td>
@@ -39,8 +41,8 @@
               <td>{{ tca.Country_Name }}</td>
               <td>{{ tca.Purchase_Currency }}</td>
               <td>{{ tca.Investee_Currency }}</td>
-              <td>USD {{ tca.purchaserate }}</td>
-              <td>USD {{ tca.Delivery_Brokage }}</td>
+              <td> {{ tca.purchaserate }}</td>
+              <td> {{ tca.Delivery_Brokage }}</td>
               <td>{{ tca.Ltcg_Tax }}</td>
               <td>{{ tca.Other_Charges }}</td>
             </tr>

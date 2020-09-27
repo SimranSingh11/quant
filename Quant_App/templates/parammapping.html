@@ -74,7 +74,7 @@
         <select class="topInput formItem10" name="param_savart" id="param_savart">
           <option value="" disabled selected>Select Parameter from Savart Database</option>
               {% for param in savart_param %}
-              <option value="{{ param }}">
+              <option value="{{ param.Param_Name }}">
                 {{param.Param_Name}}
               </option>
               {% endfor %}
@@ -112,7 +112,7 @@
               <td></td>
               <td>{{ i.ParamId }}</td>
               <td>{{ i.Param_Name }}</td>
-              <td>{{ i.Param_Savart }}</td>
+              <td>{{ i.Param_Savart  }}</td>
           </tr>
           {% endfor %}
         </tbody>

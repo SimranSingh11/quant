@@ -17,7 +17,7 @@ from collections import defaultdict
 from bson.objectid import ObjectId
 import sys 
 from Quant_App.tasks import execute_computations
-from Quant_App.compute import treatment_quartiles_df
+from Quant_App.compute import treatment_quartiles_df,automate_Raking,check_consequtive_fall_dfs,get_summary,transpose_rowindex,get_bestparametes_Combinations_unique
 
 myclient = pymongo.MongoClient("mongodb://localhost:27017/")
 mydb = myclient["V-Quant"]  ## DB
@@ -220,27 +220,83 @@ class DatalayersClass():
             mystrategies.insert({"id":"User1","ParamID":paramId,"StrategyName":strategyname,"ParameterKey":parameterkey,"Benchmark":Benchmark,"StrategyDF":data_dict,"Comments": comments})
             return True
     
+    # def insert_creattreatment(treatment_by, correlation, math_operators, industry, strategyname, treatment_name, wieghtage, param_name):
+
+    #     response = treatment.insert({"strat_name":strategyname, "treatment_name":treatment_name, "treatment_by":treatment_by, "correlation":correlation, "math_operators": math_operators, "industry":industry})
+    #     for (a, b) in zip(wieghtage, param_name):
+    #         treat_param.insert({"treatment_id":ObjectId(response), "wieghtage":a, "param_name":b })
+        
+    #     # computations
+    #     StrategyName = str(strategyname)
+    #     query = {"StrategyName":StrategyName}
+    #     my_dict = mystrategies.find_one(query)
+    #     strat_df = pd.DataFrame.from_dict(my_dict['StrategyDF'])
+    #     quartiles_df = treatment_quartiles_df(strat_df, wieghtage)
+        
+    #     # inserting into database
+    #     quartiles_df = quartiles_df.to_dict("records")
+    #     strat_df = strat_df.to_dict("records")
+    #     treatments_combinations.insert({"treatment_id":ObjectId(response), "treatment_df":strat_df,'quartiles_df':quartiles_df})
+
+    #     # execute_computations.delay(treatment_by, correlation, math_operators, industry, strategyname, treatment_name, wieghtage, param_name, str(response))
+        
+    #     return True
+    
+    
+    
+    
+    # new code on 27 september
     def insert_creattreatment(treatment_by, correlation, math_operators, industry, strategyname, treatment_name, wieghtage, param_name):
+        
 
         response = treatment.insert({"strat_name":strategyname, "treatment_name":treatment_name, "treatment_by":treatment_by, "correlation":correlation, "math_operators": math_operators, "industry":industry})
         for (a, b) in zip(wieghtage, param_name):
             treat_param.insert({"treatment_id":ObjectId(response), "wieghtage":a, "param_name":b })
-        
         # computations
         StrategyName = str(strategyname)
         query = {"StrategyName":StrategyName}
         my_dict = mystrategies.find_one(query)
         strat_df = pd.DataFrame.from_dict(my_dict['StrategyDF'])
         quartiles_df = treatment_quartiles_df(strat_df, wieghtage)
-        
-        # inserting into database
-        quartiles_df = quartiles_df.to_dict("records")
-        strat_df = strat_df.to_dict("records")
-        treatments_combinations.insert({"treatment_id":ObjectId(response), "treatment_df":strat_df,'quartiles_df':quartiles_df})
+        #### Sandeep 25/09
+       #automate_Raking,check_consequtive_fall_dfs,get_summary,transpose_rowindex,get_bestparametes_Combinations_unique
 
-        # execute_computations.delay(treatment_by, correlation, math_operators, industry, strategyname, treatment_name, wieghtage, param_name, str(response))
-        
+        print('Length of Startegy DF',len(strat_df.columns))
+        if len(strat_df.columns) >= 8:
+            print("Responce",response)
+
+            # inserting into database
+            quartiles_df = quartiles_df.to_dict("records")
+            strat_df = strat_df.to_dict("records")
+            Tranposed_D  = pd.DataFrame()
+            Df9  = pd.DataFrame()
+            Trans = Tranposed_D.to_dict("records")
+            df9 = Df9.to_dict("records")
+
+            treatments_combinations.insert({"treatment_id":ObjectId(response), "treatment_df":strat_df,"combinations_quartiles":Trans,"unique_combinations":df9,'quartiles_df':quartiles_df})
+        else:
+            my_dfs,Sorted_dfs,reductions_Dfs = automate_Raking(strat_df)
+            print('Autoranking done')
+            all_dfs = check_consequtive_fall_dfs(Sorted_dfs)
+            print('Checking consequtive done')
+            Summary = get_summary(all_dfs)
+            print('summary done')
+            Tranposed_D = transpose_rowindex(Summary)
+            print('TransposeD done')
+            Df9 = get_bestparametes_Combinations_unique(Tranposed_D)
+            print('DF9 done')
+            print("Responce",response)
+        # inserting into database
+            Trans = Tranposed_D.to_dict("records")
+            df9 = Df9.to_dict("records")
+            strat_df = strat_df.to_dict("records")
+            treatments_combinations.insert({"treatment_id":ObjectId(response), "treatment_df":strat_df,"combinations_quartiles":Trans,"unique_combinations":df9,'quartiles_df':df9})
+            #insert_computations(response, wieghtage, param_name, Tranposed_D, Df9, strat_df, quartiles_df)
+
+
         return True
+
+
 
     def insert_computations(response, wieghtage, param_name, Trans, Df9, treatment_df, my_dfs):
         for (a, b) in zip(wieghtage, param_name):

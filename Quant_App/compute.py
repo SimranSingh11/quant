@@ -59,7 +59,7 @@ def get_columnnames(ls1,ls2,ls3,ls4):
 def sort_quartiles(df):
     mydfs = df 
     mydfs  =  mydfs.copy()
-    Strt_index = mydfs.columns.get_loc('Avg_Weightage_Rank')  + 1
+    Strt_index = mydfs.columns.get_loc('Avg_Rank')  + 1
     Last_index = mydfs.columns.get_loc('Weightages_Avarage_Rank')
     strin = ""
     for s in list(mydfs.columns[Strt_index:Last_index]):
@@ -71,6 +71,25 @@ def sort_quartiles(df):
     return Sort_df
 
 
+# def automate_Raking(Data):
+#     """
+#     This functions which Data file with [Company Name, Para1,para2 ....., ParaN, Shareprice_Appriciation]
+#     Get the combinations columsn list...
+#     Created DataFrames with this combinations.. 
+#     ## Checking with Multicolinearity with parameters.. Threshold 0.75
+#     ## Ranking on Parameters   ## Column name==  Parametername + _Rank
+#     ## Avg_value of Ranking parameters ##Column name =  Avg_Weightage_Rank
+#     ## ranking on Avg_Weightage_Rank ###Column = Weightages_Avarage_Rank
+    
+#     ## sort_quartiles by Return DataFrame with Quartiles.. 
+    
+#     Returns : 
+#     my_dfs ==> After multicolinearity all the combinations DataFrames...
+#     Sorted_dfs ==> Group by Quartiles DataFrames...
+#     reductions_Dfs ==> Reductions Dfs...
+    
+#     """
+    
 def automate_Raking(Data):
     """
     This functions which Data file with [Company Name, Para1,para2 ....., ParaN, Shareprice_Appriciation]
@@ -92,6 +111,7 @@ def automate_Raking(Data):
     
     Df = Data
     Df = Df.fillna(0)
+#     Df = Df[Df.iloc[:,-1].replace({0:-1})]
     Df = Df.copy()
     df_list = list(Df.columns)
 
@@ -99,7 +119,7 @@ def automate_Raking(Data):
     
 
     for i in range(1,len(df_list[1:])):
-        s = rSubset(df_list[1:-1],i)
+        s = rSubset(df_list[2:-1],i)
         combi_list = []
         for j in s:
             combi_list.append(list(j)) 
@@ -115,6 +135,7 @@ def automate_Raking(Data):
         for i in j[:]:
 
             i.insert(0,'Company Name')
+            i.insert(1,'Portfolio')
             i.extend(['Shareprice_Appriciation'])
             df1 = pd.DataFrame(Df[i])
             multi_corr.append(df1) 
@@ -150,7 +171,7 @@ def automate_Raking(Data):
             columns_name = columns[j]
             k = len(copied_Cor.columns)-1
             #print('K Value',k)
-            i = j+1
+            i = j+2      ## J+ 4 means after from 5th index
 #             if copied_Cor.iloc[j,k] >= 0.05: ## Dont use
             frame[str(columns_name) + '_Rank'] = copied_frame.iloc[:,i].rank(method = 'first',ascending=0)
     my_dfs = All_Dataframes.copy()            
@@ -158,14 +179,14 @@ def automate_Raking(Data):
         
         L = f.columns.get_loc('Shareprice_Appriciation') + 1
         col = f.iloc[: ,L:]
-        f['Avg_Weightage_Rank'] = col.mean(axis=1).round()
+        f['Avg_Rank'] = col.mean(axis=1).round()
     
     Avg_ranks = my_dfs.copy()
     
     my_dfs = []
     for new in Avg_ranks:
         i = new.columns.get_loc("Shareprice_Appriciation")+1
-        j = new.columns.get_loc("Avg_Weightage_Rank")
+        j = new.columns.get_loc("Avg_Rank")
         l = len(new.columns[i:j])
         z = np.ones(l).tolist()
         for k in range(0,l):
@@ -175,7 +196,7 @@ def automate_Raking(Data):
 
                 df1 = new.copy()
                 p = df1.columns.get_loc("Shareprice_Appriciation")+1
-                q = df1.columns.get_loc("Avg_Weightage_Rank")
+                q = df1.columns.get_loc("Avg_Rank")
                 cols = list(df1.columns[p:q])
                 weightage_list = ['_Weight_','_Weight_','_Weight_','_Weight_','_Weight_','_Weight_','_Weight_','_Weight_','_Weight_','_Weight_','_Weight_']
                 Separater_list = ['|','|','|','|','|','|','|','|','|','|','|','|','|','|','|']
@@ -193,12 +214,24 @@ def automate_Raking(Data):
     
     for frames in my_dfs:
 #     frame = frames.copy()
-        i = frames.columns.get_loc("Avg_Weightage_Rank")+1
+        i = frames.columns.get_loc("Avg_Rank")+1
         frames['Weightages_Avarage_Rank'] = frames.iloc[:,i:].mean(axis=1).round()
+        
+        ##
+        j = frames.columns.get_loc("Weightages_Avarage_Rank")
+        frames['Weighatages_Rank'] = frames.iloc[:,j].rank(method = 'first',ascending=1)
+       ##
+   
+    lables_ = []
+    for i in range(1,int(np.sqrt(Df.shape[0]).round())+1):
+        lab = 'Q' + str(i)
+        lables_.append(lab)
 
+    
     Sorted_dfs = []
     for frames in my_dfs:
-        frames["Quartiles"] = pd.qcut(frames['Weightages_Avarage_Rank'].rank(method='first'), int(np.sqrt(frames.shape[0])) , labels=["Q1", "Q2", "Q3","Q4","Q5","Q6","Q7"])
+        #frames["Quartiles"] = pd.qcut(frames['Weightages_Avarage_Rank'].rank(method='first'), int(np.sqrt(frames.shape[0]).round()) , labels=["Q1", "Q2", "Q3","Q4","Q5","Q6","Q7"])
+        frames["Quartiles"] = pd.qcut(frames['Weighatages_Rank'].rank(method='first'), int(np.sqrt(frames.shape[0]).round()) , labels=lables_)
         Testing_Q = frames.copy()
         Sort_df = sort_quartiles(Testing_Q)
         sortted_q  = list(Sort_df.iloc[:,0])
@@ -352,7 +385,6 @@ def treatment_quartiles_df(df, wieghtage):
     Quartiles = Quartiles.fillna(0)
     # Quartiles = Quartiles[new_columns_list]
     for i in range(2,len(Quartiles.columns[:-1])):
-    #     Data_h = Data_e.copy()
         col = str(Quartiles.columns[i])
         Quartiles[col+'_Rank'] = Quartiles.iloc[:,i].rank(method = 'first',ascending=0)
     L = Quartiles.columns.get_loc('Shareprice_Appriciation') + 1
